@@ -34,7 +34,7 @@ public class ClientesDAO implements IClientesDAO {
         
         
         try (
-                Connection conexion = this.conexion.obtenerConexion(); 
+                Connection conexion = this.conexion.obtenerConexion() ;
                 PreparedStatement comando = conexion.prepareStatement(
                 sentenciaSQL,
                 Statement.RETURN_GENERATED_KEYS);) {
@@ -42,12 +42,13 @@ public class ClientesDAO implements IClientesDAO {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date fecha = dateFormat.parse(clienteNuevo.getFechaNacimiento());
             java.sql.Date fechaSql = new java.sql.Date(fecha.getTime());
-            int edad = Period.between(fechaSql.toLocalDate(), LocalDate.now()).getYears() ;
+            
+            int edad = fechaSql.toLocalDate().until(LocalDate.now()).getYears() ;
             
             
             comando.setDate(1, fechaSql);
-            comando.setString(2, sentenciaSQL);
-            comando.setInt(3, edad);
+            comando.setInt(2, edad);
+            comando.setString(3, clienteNuevo.getContrasenia()) ;
 
             int numRegistros = comando.executeUpdate();
             logger.log(Level.INFO, "Se agregaron {0} clientes", numRegistros);
@@ -69,6 +70,8 @@ public class ClientesDAO implements IClientesDAO {
                 comando2.setInt(2, clienteNuevo.getCp());
                 comando2.setInt(3, clienteNuevo.getNumExt());
                 comando2.setLong(4, idsGenerados.getLong(1));
+                
+                int numRegistros2 = comando2.executeUpdate();
             } catch(SQLException ex) {
                 logger.log(Level.SEVERE, "Error con el Domicilio del Cliente", ex);
                 throw new PersistenciaException("Error con el Domicilio del Cliente", ex);
@@ -88,6 +91,8 @@ public class ClientesDAO implements IClientesDAO {
                 comando3.setString(2, clienteNuevo.getApellidoP());
                 comando3.setString(3, clienteNuevo.getApellidoM());
                 comando3.setLong(4, idsGenerados.getLong(1));
+                
+                int numRegistros3 = comando3.executeUpdate();
             } catch(SQLException ex) {
                 logger.log(Level.SEVERE, "Error con el Nombre del Cliente", ex);
                 throw new PersistenciaException("Error con el Nombre del Cliente", ex);

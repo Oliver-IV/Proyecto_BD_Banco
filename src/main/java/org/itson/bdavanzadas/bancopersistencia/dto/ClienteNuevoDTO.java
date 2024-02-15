@@ -9,10 +9,10 @@ package org.itson.bdavanzadas.bancopersistencia.dto;
  * @author Oliver Valle
  */
 public class ClienteNuevoDTO {
-    private int cp ;
+    private int cp, numExt ;
     private String nombres, apellidoP, apellidoM ;
     private String fechaNacimiento ;
-    private String calle, numExt ;
+    private String calle ;
     private String contrasenia ;
     
     public ClienteNuevoDTO() {
@@ -72,11 +72,11 @@ public class ClienteNuevoDTO {
         this.calle = calle;
     }
 
-    public String getNumExt() {
+    public int getNumExt() {
         return numExt;
     }
 
-    public void setNumExt(String numExt) {
+    public void setNumExt(int numExt) {
         this.numExt = numExt;
     }
 

@@ -9,6 +9,7 @@ import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancodominio.Cuenta;
 import org.itson.bdavanzadas.bancodominio.Transaccion;
 import org.itson.bdavanzadas.bancopersistencia.dto.ClienteNuevoDTO;
+import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException;
 
 /**
  *
@@ -16,14 +17,14 @@ import org.itson.bdavanzadas.bancopersistencia.dto.ClienteNuevoDTO;
  */
 public interface IClientesDAO {
     
-    Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) ;
+    Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) throws PersistenciaException ;
     
-    Transaccion agregarTransaccion() ;
+    Transaccion agregarTransaccion() throws PersistenciaException ;
     
-    List<Cliente> obtenerListaClientes() ;
+    List<Cliente> obtenerListaClientes() throws PersistenciaException ;
     
-    List<Cuenta> obtenerListaCuentas() ;
+    List<Cuenta> obtenerListaCuentas() throws PersistenciaException ;
     
-    List<Transaccion> obtenerListaTransaccion() ;
+    List<Transaccion> obtenerListaTransaccion() throws PersistenciaException ;
     
 }

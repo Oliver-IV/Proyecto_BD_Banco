@@ -194,7 +194,8 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTransferirActionPerformed
 
     private void btnRetiroSinCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetiroSinCuentaActionPerformed
-       RetiroSinCuentaInForm retiroSinCuenta = new RetiroSinCuentaInForm(clientesDAO, Float.parseFloat(txtSaldo.getText()), cuentasCliente.get(0)) ;
+       dispose() ;
+       RetiroSinCuentaInForm retiroSinCuenta = new RetiroSinCuentaInForm(clientesDAO, Float.parseFloat(txtSaldo.getText()), cuentasCliente.get(0), cliente) ;
        retiroSinCuenta.setVisible(true);
     }//GEN-LAST:event_btnRetiroSinCuentaActionPerformed
 

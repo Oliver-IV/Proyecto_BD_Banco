@@ -172,6 +172,7 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRetiroSinCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetiroSinCuentaActionPerformed
+        dispose() ;
         RetiroSinCuentaOutForm  retiroSinCuentaOutForm = new RetiroSinCuentaOutForm(clientesDAO);
         retiroSinCuentaOutForm.setVisible(true);
         

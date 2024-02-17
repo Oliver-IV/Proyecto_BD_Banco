@@ -212,9 +212,104 @@ public class ClientesDAO implements IClientesDAO {
     }
     
     @Override
+
     public Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+//    
+//    public Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) throws PersistenciaException {
+//        String sentenciaSQL = """
+//                           INSERT INTO cliente(fecha_nacimiento, edad, contrasenia)
+//                           VALUES(?, ?, ?) ;
+//                          """;
+//        
+//        
+//        try (
+//                Connection conexion = this.conexion.obtenerConexion() ;
+//                PreparedStatement comando = conexion.prepareStatement(
+//                sentenciaSQL,
+//                Statement.RETURN_GENERATED_KEYS);) {
+//            
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            Date fecha = dateFormat.parse(clienteNuevo.getFechaNacimiento());
+//            java.sql.Date fechaSql = new java.sql.Date(fecha.getTime());
+//            
+//            int edad = fechaSql.toLocalDate().until(LocalDate.now()).getYears() ;
+//            
+//            
+//            comando.setDate(1, fechaSql);
+//            comando.setInt(2, edad);
+//            comando.setString(3, clienteNuevo.getContrasenia()) ;
+//
+//            int numRegistros = comando.executeUpdate();
+//            logger.log(Level.INFO, "Se agregaron {0} clientes", numRegistros);
+//            
+//            ResultSet idsGenerados = comando.getGeneratedKeys();
+//            idsGenerados.next();
+//            
+//            String sentenciaSQL2 = """
+//                               INSERT INTO domicilio(calle, codigo_postal, numero_exterior, id_cliente_dom)
+//                               VALUES (?, ?, ?, ?) ;
+//                               """ ;
+//            
+//            try(
+//                PreparedStatement comando2 = conexion.prepareStatement(
+//                sentenciaSQL2,
+//                Statement.RETURN_GENERATED_KEYS);
+//                    ) {
+//                comando2.setString(1, clienteNuevo.getCalle());
+//                comando2.setInt(2, clienteNuevo.getCp());
+//                comando2.setInt(3, clienteNuevo.getNumExt());
+//                comando2.setLong(4, idsGenerados.getLong(1));
+//                
+//                int numRegistros2 = comando2.executeUpdate();
+//            } catch(SQLException ex) {
+//                logger.log(Level.SEVERE, "Error con el Domicilio del Cliente", ex);
+//                throw new PersistenciaException("Error con el Domicilio del Cliente", ex);
+//            }
+//            
+//            String sentenciaSQL3 = """
+//                                   INSERT INTO nombre_completo(nombres, apellido_paterno, apellido_materno, id_cliente_nom)
+//                                   VALUES(?, ?, ?, ?) ;
+//                                   """ ;
+//            
+//            try(
+//                PreparedStatement comando3 = conexion.prepareStatement(
+//                sentenciaSQL3,
+//                Statement.RETURN_GENERATED_KEYS);
+//                    ) {
+//                comando3.setString(1, clienteNuevo.getNombres());
+//                comando3.setString(2, clienteNuevo.getApellidoP());
+//                comando3.setString(3, clienteNuevo.getApellidoM());
+//                comando3.setLong(4, idsGenerados.getLong(1));
+//                
+//                int numRegistros3 = comando3.executeUpdate();
+//            } catch(SQLException ex) {
+//                logger.log(Level.SEVERE, "Error con el Nombre del Cliente", ex);
+//                throw new PersistenciaException("Error con el Nombre del Cliente", ex);
+//            }
+//            
+//            
+//            Cliente cliente = new Cliente(idsGenerados.getLong(1),
+//                    clienteNuevo.getNombres(),
+//                    clienteNuevo.getApellidoP(),
+//                    clienteNuevo.getApellidoM(),
+//                    clienteNuevo.getFechaNacimiento(),
+//                    edad,
+//                    clienteNuevo.getCalle(),
+//                    clienteNuevo.getNumExt(),
+//                    clienteNuevo.getCp(),
+//                    clienteNuevo.getContrasenia());
+//
+//            return cliente;
+//        } catch (SQLException ex) {
+//            logger.log(Level.SEVERE, "No se pudo guardar el cliente", ex);
+//            throw new PersistenciaException("No se pudo guardar el cliente", ex);
+//        } catch(ParseException ex) {
+//            logger.log(Level.SEVERE, "No se pudo guardar el cliente", ex);
+//            throw new PersistenciaException("No se pudo guardar el cliente", ex);
+//        }
+//    }
     
     @Override
     public Transaccion aplicarRetiroSinCuenta(int folio, int contrasenia) throws PersistenciaException {

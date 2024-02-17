@@ -630,6 +630,7 @@ public class ClientesDAO implements IClientesDAO {
 
     @Override
     public List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, String fechaInicio, String fechaFin) {
+        System.out.println("");
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

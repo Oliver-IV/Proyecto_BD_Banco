@@ -20,7 +20,7 @@ public class ClienteNuevoDTO {
     }
     
     public ClienteNuevoDTO(String nombres, String apellidoP, String apellidoM,
-    String fechaNacimiento, String calle, String numExt, String contrasneia) {
+    String fechaNacimiento, int edad ,String calle, String numExt, int cp, String contrasneia) {
         
     }
 

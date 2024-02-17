@@ -7,6 +7,7 @@ package org.itson.bdavanzadas.banco;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancodominio.Cuenta;
 import org.itson.bdavanzadas.bancodominio.Transaccion;
 import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
@@ -21,17 +22,19 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
     IClientesDAO clientesDAO ;
     float saldo ;
     Cuenta cuenta ;
+    Cliente cliente ;
     
     
     
     /**
      * Creates new form RetiroSinCuentaInForm
      */
-    public RetiroSinCuentaInForm(IClientesDAO clientesDAO, float saldo, Cuenta cuenta) {
+    public RetiroSinCuentaInForm(IClientesDAO clientesDAO, float saldo, Cuenta cuenta, Cliente cliente) {
         initComponents();
         this.clientesDAO = clientesDAO ;
         this.saldo = saldo ;
         this.cuenta = cuenta ;
+        this.cliente = cliente ;
     }
     
     public void llamarPantallaRetiro() {
@@ -151,7 +154,9 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        dispose() ;
+    dispose() ;
+    MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+    menu.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**

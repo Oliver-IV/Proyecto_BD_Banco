@@ -16,25 +16,24 @@ import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException
  * @author Oliver Valle
  */
 public interface IClientesDAO {
-    
-    Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) throws PersistenciaException ;
-    
-    Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException ;
-    
-    Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException ;
-    
-    Transaccion aplicarRetiroSinCuenta(int folio, int contrasenia) throws PersistenciaException ;
-    
-    List<Cliente> obtenerListaClientes() throws PersistenciaException ;
-    
-    List<Cuenta> obtenerListaCuentas() throws PersistenciaException ;
-    
-    List<Transaccion> obtenerListaTransaccion() throws PersistenciaException ;
-    
-    List<Transaccion> obtenerListaRetiroSinCuenta() throws PersistenciaException ;
-    
-    List<Transaccion> obtenerListaTransefencias() throws PersistenciaException ;
-    
-    List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, String fechaInicio, String fechaFin) ;
-    
+
+    Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) throws PersistenciaException;
+
+    Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException;
+
+    Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException;
+
+    Transaccion aplicarRetiroSinCuenta(int folio, int contrasenia) throws PersistenciaException;
+
+    List<Cliente> obtenerListaClientes() throws PersistenciaException;
+
+    List<Cuenta> obtenerListaCuentas() throws PersistenciaException;
+
+    List<Transaccion> obtenerListaTransaccion() throws PersistenciaException;
+
+    List<Transaccion> obtenerListaRetiroSinCuenta() throws PersistenciaException;
+
+    List<Transaccion> obtenerListaTransefencias() throws PersistenciaException;
+
+    List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, String fechaInicio, String fechaFin) throws PersistenciaException;
 }

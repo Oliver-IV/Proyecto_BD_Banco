@@ -4,17 +4,24 @@
  */
 package org.itson.bdavanzadas.banco;
 
+import org.itson.bdavanzadas.bancodominio.Cliente;
+import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
+
 /**
  *
  * @author Oliver Valle
  */
 public class PantallaRetiroInForm extends javax.swing.JFrame {
-
+    
+    IClientesDAO clientesDAO ;
+    Cliente cliente ;
     /**
      * Creates new form PantallaRetiroInForm
      */
-    public PantallaRetiroInForm(int folio, int contrasenia) {
+    public PantallaRetiroInForm(IClientesDAO clientesDAO, int folio, int contrasenia, Cliente cliente) {
         initComponents();
+        this.clientesDAO = clientesDAO ;
+        this.cliente = cliente ;
         txtFolio.setText(String.valueOf(folio)) ;
         txtContrasenia.setText(String.valueOf(contrasenia));
         txtFolio.setEditable(false);
@@ -106,6 +113,8 @@ public class PantallaRetiroInForm extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         dispose() ;
+        MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+        menu.setVisible(true);
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**

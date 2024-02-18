@@ -53,7 +53,7 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
                 }
             }
             
-            PantallaRetiroInForm pantallaRetiro = new PantallaRetiroInForm(folio, contrasenia);
+            PantallaRetiroInForm pantallaRetiro = new PantallaRetiroInForm(clientesDAO, folio, contrasenia, cliente);
             dispose() ;
             pantallaRetiro.setVisible(true);
         } catch (PersistenciaException ex) {

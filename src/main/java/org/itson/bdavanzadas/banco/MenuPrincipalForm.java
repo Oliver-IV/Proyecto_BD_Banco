@@ -6,6 +6,7 @@ package org.itson.bdavanzadas.banco;
 
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancodominio.Cuenta;
@@ -22,6 +23,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     IClientesDAO clientesDAO ;
     List<Cuenta> cuentasCliente ;
     Cliente cliente ;
+    long numCuentaSelec = -1;
     
     /**
      * Creates new form MenuPrincipalForm
@@ -32,6 +34,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         this.cliente = cliente ;
         cuentasCliente = new LinkedList() ;
         obtenerCuentas() ;
+        setComboBoxModel() ;
         asignarSaldo() ;
         lblInicio.setText(lblInicio.getText() + " " + cliente.getNombres() + "!");
     }
@@ -54,16 +57,47 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }
     
     public void asignarSaldo() {
-        float saldo = 0 ;
-        for (int i = 0; i < cuentasCliente.size(); i++) {
-            saldo = saldo + cuentasCliente.get(i).getSaldo() ;
-        }
-        txtSaldo.setText(String.valueOf(saldo));
+        txtSaldo.setText(String.valueOf(obtenerCuentaSelec().getSaldo()));
         txtSaldo.setEditable(false);
     }
     
+    public void setComboBoxModel() {
+        String[] arregloCuentas = new String[cuentasCliente.size()];
+        try{
+        for (int i = 0; i < cuentasCliente.size(); i++) {
+            arregloCuentas[i] = "Numero de Cuenta: " + String.valueOf(cuentasCliente.get(i).getNumCuenta()) ;
+        }
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+        
+        DefaultComboBoxModel<String> modeloComboBox = new DefaultComboBoxModel<>(arregloCuentas) ;
+        comboBoxCuentas.setModel(modeloComboBox);
+    }
     
+    public Cuenta obtenerCuentaSelec() {
+        Cuenta cuentaSelec = null ;
+        for (int i = 0; i < cuentasCliente.size(); i++) {
+            if (cuentasCliente.get(i).getNumCuenta() == obtenerNumCuentaSelec()) {
+                cuentaSelec = cuentasCliente.get(i) ;
+            }
+        }
+        
+        return cuentaSelec ;
+    }
     
+    public float obtenerNumCuentaSelec() {
+        String textoSaldo = comboBoxCuentas.getSelectedItem().toString() ;
+        String[] numeros = textoSaldo.split("\\D+"); // Divide la cadena en partes que no son números
+        for (String numero : numeros) {
+            if (!numero.isEmpty()) { // Para evitar cadenas vacías
+                int num = Integer.parseInt(numero);
+                return num ;
+            }
+        }
+         return -1 ;
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,6 +115,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         btnHistorialOp = new javax.swing.JButton();
         btnPerfil = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
+        comboBoxCuentas = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,6 +158,13 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
             }
         });
 
+        comboBoxCuentas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        comboBoxCuentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxCuentasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,17 +183,22 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
                         .addComponent(btnRetiroSinCuenta)
                         .addGap(66, 66, 66))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(92, 92, 92)
-                .addComponent(lblSaldo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(lblInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion)
                 .addGap(29, 29, 29))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(lblSaldo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(comboBoxCuentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,11 +207,13 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblInicio)
                     .addComponent(btnCerrarSesion))
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(comboBoxCuentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSaldo)
-                    .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                    .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSaldo))
+                .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnHistorialOp)
                     .addComponent(btnPerfil))
@@ -195,7 +244,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
 
     private void btnRetiroSinCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetiroSinCuentaActionPerformed
        dispose() ;
-       RetiroSinCuentaInForm retiroSinCuenta = new RetiroSinCuentaInForm(clientesDAO, Float.parseFloat(txtSaldo.getText()), cuentasCliente.get(0), cliente) ;
+       RetiroSinCuentaInForm retiroSinCuenta = new RetiroSinCuentaInForm(clientesDAO, Float.parseFloat(txtSaldo.getText()), obtenerCuentaSelec(), cliente) ;
        retiroSinCuenta.setVisible(true);
     }//GEN-LAST:event_btnRetiroSinCuentaActionPerformed
 
@@ -208,6 +257,10 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void comboBoxCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCuentasActionPerformed
+        asignarSaldo() ;
+    }//GEN-LAST:event_comboBoxCuentasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,6 +303,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     private javax.swing.JButton btnPerfil;
     private javax.swing.JButton btnRetiroSinCuenta;
     private javax.swing.JButton btnTransferir;
+    private javax.swing.JComboBox<String> comboBoxCuentas;
     private javax.swing.JLabel lblInicio;
     private javax.swing.JLabel lblSaldo;
     private javax.swing.JTextField txtSaldo;

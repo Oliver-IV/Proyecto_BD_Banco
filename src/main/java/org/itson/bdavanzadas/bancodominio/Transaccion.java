@@ -37,6 +37,13 @@ public class Transaccion {
         this.contrasenia = contrasenia ;
         this.estado = estado ;
     }
+    
+    public Transaccion(long id, float monto, String fecha, String estado) {
+        this.id = id ;
+        this.monto = monto ;
+        this.fecha = fecha ;
+        this.estado = estado ; 
+    }
 
     public String getEstado() {
         return estado;

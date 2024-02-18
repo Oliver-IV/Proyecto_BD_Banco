@@ -45,6 +45,11 @@ public class PantallaRetiroOutForm extends javax.swing.JFrame {
         lblMonto.setText("Monto:");
 
         btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         lblFecha.setText("Fecha:");
 
@@ -103,6 +108,11 @@ public class PantallaRetiroOutForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnAceptarActionPerformed
 
 //    /**
 //     * @param args the command line arguments

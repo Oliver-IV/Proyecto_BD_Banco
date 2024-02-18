@@ -228,8 +228,9 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
-        JOptionPane.showMessageDialog(this, "Esta función está en desarrollo actualmente", 
-                            "Opcion en Desarrollo", JOptionPane.INFORMATION_MESSAGE);
+        dispose() ;
+        PerfilForm perfil = new PerfilForm(clientesDAO, cliente) ;
+        perfil.setVisible(true);
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void btnHistorialOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialOpActionPerformed

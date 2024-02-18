@@ -4,7 +4,6 @@
  */
 package org.itson.bdavanzadas.banco;
 
-import org.itson.bdavanzadas.bancodominio.Transaccion;
 import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
 
 /**

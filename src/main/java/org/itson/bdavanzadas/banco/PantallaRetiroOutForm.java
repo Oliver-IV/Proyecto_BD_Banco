@@ -13,10 +13,25 @@ import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
  */
 public class PantallaRetiroOutForm extends javax.swing.JFrame {
     
-    public PantallaRetiroOutForm(float monto, String fecha) {
+    IClientesDAO clientesDAO ;
+    boolean cobrado ;
+    
+    public PantallaRetiroOutForm(IClientesDAO clientesDAO, float monto, String fecha, boolean cobrado) {
         initComponents();
-        txtMonto.setText(String.valueOf(monto));
-        txtFecha.setText(String.valueOf(fecha));
+        this.clientesDAO = clientesDAO ;
+        this.cobrado = cobrado ;
+        
+        if (!cobrado) {
+            lblDescripcion.setText("El retiro sin cuenta fue verificado de forma exitosa");
+            txtMonto.setText(String.valueOf(monto));
+            txtFecha.setText(String.valueOf(fecha));
+        } else {
+            lblDescripcion.setText("Este retiro sin cuenta ya ha sido cobrado");
+            txtMonto.setText("********");
+            txtFecha.setText("********");
+        }
+        
+        
         txtMonto.setEditable(false);
         txtFecha.setEditable(false);
     }
@@ -111,6 +126,8 @@ public class PantallaRetiroOutForm extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         dispose() ; 
+        LoginForm login = new LoginForm(clientesDAO) ;
+        login.setVisible(true) ;
     }//GEN-LAST:event_btnAceptarActionPerformed
 
 //    /**

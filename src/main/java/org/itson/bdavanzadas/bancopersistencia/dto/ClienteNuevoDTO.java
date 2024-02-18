@@ -20,8 +20,15 @@ public class ClienteNuevoDTO {
     }
     
     public ClienteNuevoDTO(String nombres, String apellidoP, String apellidoM,
-    String fechaNacimiento, int edad ,String calle, String numExt, int cp, String contrasneia) {
-        
+    String fechaNacimiento, String calle, int numExt, int cp, String contrasenia) {
+        this.cp = cp;
+        this.numExt = numExt;
+        this.nombres = nombres;
+        this.apellidoP = apellidoP;
+        this.apellidoM = apellidoM;
+        this.fechaNacimiento = fechaNacimiento;
+        this.calle = calle;
+        this.contrasenia = contrasenia;
     }
 
     public int getCp() {

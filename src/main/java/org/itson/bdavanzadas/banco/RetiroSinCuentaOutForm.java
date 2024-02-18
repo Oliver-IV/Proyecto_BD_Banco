@@ -19,6 +19,7 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
 
     IClientesDAO clientesDAO;
     Transaccion transaccion;
+    boolean cobrado = false ;
 
     public RetiroSinCuentaOutForm(IClientesDAO clientesDAO) {
         initComponents();
@@ -33,10 +34,13 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
 
             for (int i = 0; i < listaTransacciones.size(); i++) {
                 if (folio == listaTransacciones.get(i).getFolio() && contrasenia == listaTransacciones.get(i).getContrasenia()) {
+                    if(listaTransacciones.get(i).getEstado().equals("Cobrado"))
+                        cobrado = true ;
+                    
                     float monto = listaTransacciones.get(i).getMonto();
                     String fecha = listaTransacciones.get(i).getFecha();
                     clientesDAO.aplicarRetiroSinCuenta(folio, contrasenia) ;
-                    PantallaRetiroOutForm pantallaRetiroOutForm = new PantallaRetiroOutForm(monto, fecha);
+                    PantallaRetiroOutForm pantallaRetiroOutForm = new PantallaRetiroOutForm(clientesDAO, monto, fecha, cobrado);
                     dispose();
                     pantallaRetiroOutForm.setVisible(true);
                 }

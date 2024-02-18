@@ -4,7 +4,11 @@
  */
 package org.itson.bdavanzadas.banco;
 
+import javax.swing.JOptionPane;
+import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
+import org.itson.bdavanzadas.bancopersistencia.dto.ClienteNuevoDTO;
+import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException;
 
 /**
  *
@@ -13,6 +17,8 @@ import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
 public class RegistrarClienteForm extends javax.swing.JFrame {
 
     IClientesDAO clientesDAO ;
+    Cliente clienteRegistrado ;
+    int contClicks = 0 ;
     
     /**
      * Creates new form RegistrarClienteForm
@@ -20,12 +26,96 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
     public RegistrarClienteForm(IClientesDAO clientesDAO) {
         initComponents();
         this.clientesDAO = clientesDAO ;
+        hidePassword() ;
     }
     
     public void agregarCliente() {
+        String nombres = txtNombres.getText() ;
+        String apellidoP = txtApellidoP.getText() ;
+        String apellidoM = txtApellidoM.getText() ;
+        String fechaNacimiento = comboBoxAnio.getSelectedItem().toString() + "-" + comboBoxMes.getSelectedItem().toString() + "-" + comboBoxDia.getSelectedItem().toString() ;
+        String calle = txtCalle.getText() ;
+        int numExt = Integer.parseInt(txtNumExt.getText()) ;
+        int cp = Integer.parseInt(txtCodigoPostal.getText()) ;
+        String contrasenia = txtContrasenia.getText() ;
+        
+        ClienteNuevoDTO clienteNuevo = new ClienteNuevoDTO(nombres, apellidoP, apellidoM,
+        fechaNacimiento, calle, numExt, cp, contrasenia) ;
+        
+        try {
+            clienteRegistrado = clientesDAO.agregarCliente(clienteNuevo) ;
+            
+        } catch(PersistenciaException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al agregar cliente", JOptionPane.ERROR_MESSAGE) ;
+        }
+    }
+    
+    public void hidePersonalData() {
+        lblDatosPersonales.setVisible(false);
+        lblDatosPersonales.setEnabled(false);
+        lblDomicilio.setVisible(false);
+        lblDomicilio.setEnabled(false);
+        lblNombres.setVisible(false);
+        lblNombres.setEnabled(false);
+        txtNombres.setVisible(false);
+        txtNombres.setEnabled(false);
+        lblApellidoP.setVisible(false);
+        lblApellidoP.setEnabled(false);
+        txtApellidoP.setVisible(false);
+        txtApellidoP.setEnabled(false);
+        lblApellidoM.setVisible(false);
+        lblApellidoM.setEnabled(false);
+        txtApellidoM.setVisible(false);
+        txtApellidoM.setEnabled(false);
+        lblFechaNacimiento.setVisible(false);
+        lblFechaNacimiento.setEnabled(false);
+        comboBoxAnio.setEnabled(false);
+        comboBoxAnio.setVisible(false);
+        comboBoxMes.setEnabled(false);
+        comboBoxMes.setVisible(false);
+        comboBoxDia.setEnabled(false);
+        comboBoxDia.setVisible(false);
+        lblCalle.setVisible(false);
+        lblCalle.setEnabled(false);
+        txtCalle.setVisible(false);
+        txtCalle.setEnabled(false);
+        lblNumExt.setVisible(false);
+        lblNumExt.setEnabled(false);
+        txtNumExt.setVisible(false);
+        txtNumExt.setEnabled(false) ;
+        lblCodigoPostal.setVisible(false);
+        lblCodigoPostal.setEnabled(false);
+        txtCodigoPostal.setVisible(false);
+        txtCodigoPostal.setEnabled(false);
+    }
+    
+    public void showPassword() {
+        lblContrasenia.setVisible(true);
+        lblContrasenia.setEnabled(true);
+        txtContrasenia.setVisible(true);
+        txtContrasenia.setEnabled(true);
+        lblCrearContrasenia.setVisible(true);
+        lblCrearContrasenia.setEnabled(true);
+    }
+    
+    public void hidePassword() {
+        lblContrasenia.setVisible(false);
+        lblContrasenia.setEnabled(false);
+        txtContrasenia.setVisible(false);
+        txtContrasenia.setEnabled(false);
+        lblCrearContrasenia.setVisible(false);
+        lblCrearContrasenia.setEnabled(false);
+    }
+    
+    public boolean booleansFirst() {
+        return txtNombres.getText().isBlank() || txtNombres.getText().isEmpty() || txtApellidoP.getText().isBlank() || txtApellidoP.getText().isEmpty()
+            || txtApellidoM.getText().isBlank() || txtApellidoM.getText().isEmpty() || txtCodigoPostal.getText().isBlank() || txtCodigoPostal.getText().isEmpty() ;
         
     }
     
+    public boolean booleansSecond() {
+        return txtContrasenia.getText().isBlank() || txtContrasenia.getText().isEmpty() ;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,7 +136,6 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         txtNombres = new javax.swing.JTextField();
         txtApellidoP = new javax.swing.JTextField();
         txtApellidoM = new javax.swing.JTextField();
-        txtFechaNacimiento = new javax.swing.JTextField();
         lblCalle = new javax.swing.JLabel();
         lblCodigoPostal = new javax.swing.JLabel();
         lblNumExt = new javax.swing.JLabel();
@@ -54,30 +143,72 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         txtCodigoPostal = new javax.swing.JTextField();
         txtNumExt = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
+        lblContrasenia = new javax.swing.JLabel();
+        txtContrasenia = new javax.swing.JTextField();
+        lblCrearContrasenia = new javax.swing.JLabel();
+        comboBoxAnio = new javax.swing.JComboBox<>();
+        comboBoxMes = new javax.swing.JComboBox<>();
+        comboBoxDia = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(450, 350));
+        getContentPane().setLayout(null);
 
         lblTitulo.setText("¡Crea una cuenta con nosotros!");
+        getContentPane().add(lblTitulo);
+        lblTitulo.setBounds(40, 40, 210, 16);
 
         lblDatosPersonales.setText("Datos Personales");
+        getContentPane().add(lblDatosPersonales);
+        lblDatosPersonales.setBounds(80, 110, 130, 16);
 
         lblDescripcion.setText("*Es obligatorio llenar todos los campos*");
+        getContentPane().add(lblDescripcion);
+        lblDescripcion.setBounds(80, 60, 260, 16);
 
         lblNombres.setText("Nombres:");
+        getContentPane().add(lblNombres);
+        lblNombres.setBounds(60, 150, 52, 16);
 
         lblApellidoP.setText("Apellido Paterno:");
+        getContentPane().add(lblApellidoP);
+        lblApellidoP.setBounds(20, 180, 110, 16);
 
         lblApellidoM.setText("Apellido Materno:");
+        getContentPane().add(lblApellidoM);
+        lblApellidoM.setBounds(20, 210, 110, 16);
 
         lblFechaNacimiento.setText("Fecha de Nacimiento:");
+        getContentPane().add(lblFechaNacimiento);
+        lblFechaNacimiento.setBounds(80, 250, 170, 16);
 
         lblDomicilio.setText("Domicilio");
+        getContentPane().add(lblDomicilio);
+        lblDomicilio.setBounds(260, 110, 90, 16);
+        getContentPane().add(txtNombres);
+        txtNombres.setBounds(130, 150, 71, 22);
+        getContentPane().add(txtApellidoP);
+        txtApellidoP.setBounds(130, 180, 71, 22);
+        getContentPane().add(txtApellidoM);
+        txtApellidoM.setBounds(130, 210, 71, 22);
 
         lblCalle.setText("Calle:");
+        getContentPane().add(lblCalle);
+        lblCalle.setBounds(300, 150, 70, 16);
 
         lblCodigoPostal.setText("Codigo Postal:");
+        getContentPane().add(lblCodigoPostal);
+        lblCodigoPostal.setBounds(250, 180, 100, 16);
 
         lblNumExt.setText("Num. Exterior:");
+        getContentPane().add(lblNumExt);
+        lblNumExt.setBounds(250, 210, 100, 16);
+        getContentPane().add(txtCalle);
+        txtCalle.setBounds(340, 150, 83, 22);
+        getContentPane().add(txtCodigoPostal);
+        txtCodigoPostal.setBounds(340, 180, 70, 22);
+        getContentPane().add(txtNumExt);
+        txtNumExt.setBounds(340, 210, 35, 22);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -85,107 +216,68 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
                 btnAceptarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnAceptar);
+        btnAceptar.setBounds(300, 260, 90, 23);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTitulo)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 220, Short.MAX_VALUE)
-                                .addComponent(lblDomicilio))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(lblFechaNacimiento))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDatosPersonales)
-                            .addComponent(lblDescripcion)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblNombres)
-                                .addComponent(lblApellidoP))
-                            .addComponent(lblApellidoM))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(txtApellidoM, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblNumExt))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtApellidoP, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblCodigoPostal)
-                                    .addComponent(lblCalle))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNumExt, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAceptar)
-                .addGap(68, 68, 68))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(lblTitulo)
-                .addGap(8, 8, 8)
-                .addComponent(lblDescripcion)
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDatosPersonales)
-                    .addComponent(lblDomicilio))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNombres)
-                    .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCalle)
-                    .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblApellidoP)
-                    .addComponent(txtApellidoP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCodigoPostal)
-                    .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblApellidoM)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtApellidoM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblNumExt)
-                        .addComponent(txtNumExt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(lblFechaNacimiento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAceptar))
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
+        lblContrasenia.setText("Contraseña:");
+        getContentPane().add(lblContrasenia);
+        lblContrasenia.setBounds(120, 170, 70, 16);
+        getContentPane().add(txtContrasenia);
+        txtContrasenia.setBounds(190, 170, 90, 22);
+
+        lblCrearContrasenia.setText("¡Crea tu contraseña!");
+        getContentPane().add(lblCrearContrasenia);
+        lblCrearContrasenia.setBounds(150, 90, 140, 16);
+
+        comboBoxAnio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2005", "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995", "1994", "1993", "1992", "1991", "1990", "1989", "1988", "1987", "1986", "1985", "1984", "1983", "1982", "1981", "1980", "1979", "1978", "1977", "1976", "1975", "1974", "1973", "1972", "1971", "1970", "1969", "1968", "1967", "1966", "1965", "1964", "1963", "1962", "1961", "1960", "1959", "1958", "1957", "1956", "1955", "1954", "1953", "1952", "1951", "1950", "1949", "1948", "1947", "1946", "1945", "1944", "1943", "1942", "1941", "1940", "1939", "1938", "1937", "1936", "1935", "1934", "1933", "1932", "1931", "1930" }));
+        getContentPane().add(comboBoxAnio);
+        comboBoxAnio.setBounds(40, 270, 70, 22);
+
+        comboBoxMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", " " }));
+        comboBoxMes.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                comboBoxMesComponentHidden(evt);
+            }
+        });
+        getContentPane().add(comboBoxMes);
+        comboBoxMes.setBounds(110, 270, 72, 22);
+
+        comboBoxDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", " " }));
+        getContentPane().add(comboBoxDia);
+        comboBoxDia.setBounds(180, 270, 72, 22);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        agregarCliente() ;
+  
+        if (contClicks == 1) {
+            if (!booleansSecond()) {
+                agregarCliente();
+                dispose() ;
+                PantallaFinRegistroForm finRegistro = new PantallaFinRegistroForm(clientesDAO, clienteRegistrado) ;
+                finRegistro.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
+                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        if (!booleansFirst()) {
+            contClicks++;
+            hidePersonalData();
+            showPassword();
+        } else {
+            JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
+                    "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+        }
+
+        
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void comboBoxMesComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_comboBoxMesComponentHidden
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxMesComponentHidden
 
 //    /**
 //     * @param args the command line arguments
@@ -224,10 +316,15 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JComboBox<String> comboBoxAnio;
+    private javax.swing.JComboBox<String> comboBoxDia;
+    private javax.swing.JComboBox<String> comboBoxMes;
     private javax.swing.JLabel lblApellidoM;
     private javax.swing.JLabel lblApellidoP;
     private javax.swing.JLabel lblCalle;
     private javax.swing.JLabel lblCodigoPostal;
+    private javax.swing.JLabel lblContrasenia;
+    private javax.swing.JLabel lblCrearContrasenia;
     private javax.swing.JLabel lblDatosPersonales;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblDomicilio;
@@ -239,7 +336,7 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtApellidoP;
     private javax.swing.JTextField txtCalle;
     private javax.swing.JTextField txtCodigoPostal;
-    private javax.swing.JTextField txtFechaNacimiento;
+    private javax.swing.JTextField txtContrasenia;
     private javax.swing.JTextField txtNombres;
     private javax.swing.JTextField txtNumExt;
     // End of variables declaration//GEN-END:variables

@@ -23,7 +23,6 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     IClientesDAO clientesDAO ;
     List<Cuenta> cuentasCliente ;
     Cliente cliente ;
-    long numCuentaSelec = -1;
     
     /**
      * Creates new form MenuPrincipalForm
@@ -86,7 +85,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         return cuentaSelec ;
     }
     
-    public float obtenerNumCuentaSelec() {
+    public long obtenerNumCuentaSelec() {
         String textoSaldo = comboBoxCuentas.getSelectedItem().toString() ;
         String[] numeros = textoSaldo.split("\\D+"); // Divide la cadena en partes que no son números
         for (String numero : numeros) {
@@ -239,8 +238,9 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHistorialOpActionPerformed
 
     private void btnTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferirActionPerformed
-        JOptionPane.showMessageDialog(this, "Esta función está en desarrollo actualmente", 
-                            "Opcion en Desarrollo", JOptionPane.INFORMATION_MESSAGE);
+        dispose() ;
+        TransferenciaForm transferencia = new TransferenciaForm(clientesDAO, cliente, obtenerNumCuentaSelec()) ;
+        transferencia.setVisible(true);
     }//GEN-LAST:event_btnTransferirActionPerformed
 
     private void btnRetiroSinCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetiroSinCuentaActionPerformed

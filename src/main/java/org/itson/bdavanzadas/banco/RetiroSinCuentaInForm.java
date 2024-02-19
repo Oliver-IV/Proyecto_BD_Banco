@@ -154,9 +154,9 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-    dispose() ;
-    MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
-    menu.setVisible(true);
+        dispose() ;
+        MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+        menu.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**

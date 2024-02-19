@@ -173,8 +173,10 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void btnHistorialOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialOpActionPerformed
-        JOptionPane.showMessageDialog(this, "Esta función está en desarrollo actualmente", 
-                            "Opcion en Desarrollo", JOptionPane.INFORMATION_MESSAGE);
+        HistorialOperacionesForm historialOperaciones = new HistorialOperacionesForm(clientesDAO, 3);
+        historialOperaciones.setVisible(true);
+//        JOptionPane.showMessageDialog(this, "Esta función está en desarrollo actualmente", 
+//                            "Opcion en Desarrollo", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnHistorialOpActionPerformed
 
     private void btnTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferirActionPerformed

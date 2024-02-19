@@ -146,6 +146,41 @@ public class ClientesDAO implements IClientesDAO {
             throw new PersistenciaException("No se pudo guardar el cliente", ex);
         }
     }
+    
+    @Override
+    public Cliente actualizarCliente(Cliente cliente) throws PersistenciaException {
+        String sentenciaSQL = """
+                          UPDATE cliente c
+                          JOIN domicilio d ON c.id_domicilio = d.id
+                          SET 
+                              d.calle = ? ,
+                              d.codigo_postal = ? ,
+                              d.numero_exterior = ? ,
+                              c.contrasenia = ?
+                          WHERE c.id = ?;
+                          """;
+        
+        try(
+            Connection conexion = this.conexion.obtenerConexion() ;
+            PreparedStatement comando = conexion.prepareStatement(sentenciaSQL);
+                ) {
+            
+            comando.setString(1, cliente.getCalle());
+            comando.setInt(2, cliente.getCp()) ;
+            comando.setInt(3, cliente.getNumExt());
+            comando.setString(4, cliente.getContrasenia());
+            comando.setInt(5, Integer.parseInt(String.valueOf(cliente.getId())));
+            
+            int numRegistros = comando.executeUpdate() ;
+            logger.log(Level.INFO, "Se actualizaron los datos del cliente", numRegistros);
+            
+            return cliente ;
+            
+        } catch(SQLException ex) {
+            logger.log(Level.SEVERE, "No se pudieron actualizar los datos del socio", ex) ;
+            throw new PersistenciaException("No se pudieron actualizar los datos del socio", ex) ;
+        }
+    }
 
     @Override
     public Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException {
@@ -212,109 +247,69 @@ public class ClientesDAO implements IClientesDAO {
     }
     
     @Override
+    public Transaccion agregarTransferencia(long numeroCuenta, long numeroCuentaDestino, float monto) throws PersistenciaException {
+        String sentenciaSQL = """
+                           INSERT INTO transaccion(monto, folio, fecha, num_cuenta_cliente, estado)
+                           VALUES(?, ?, CURDATE(), ?, 'Pendiente') ;
+                          """;
+        
+        String sentenciaSQL2 = """
+                               INSERT INTO transferencia(id_transaccion_tra, num_cuenta_destino)
+                               VALUES(?, ?) ;
+                               """ ;
 
-    public Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        try (
+                Connection conexion = this.conexion.obtenerConexion(); 
+                
+                PreparedStatement comando = conexion.prepareStatement(
+                sentenciaSQL,
+                Statement.RETURN_GENERATED_KEYS); 
+                
+                PreparedStatement comando2 = conexion.prepareStatement(
+                        sentenciaSQL2,
+                        Statement.RETURN_GENERATED_KEYS); 
+                
+                ) {
+
+            int folio = generarContrasenia(6) ;
+            
+            comando.setFloat(1, monto);
+            comando.setInt(2, folio);
+            comando.setLong(3, numeroCuenta);
+
+            int numRegistros = comando.executeUpdate();
+            ResultSet idsGenerados = comando.getGeneratedKeys();
+            idsGenerados.next();
+            
+            comando2.setLong(1, idsGenerados.getLong(1));
+            comando2.setLong(2, numeroCuentaDestino);
+
+            int numRegistros2 = comando2.executeUpdate();
+            ResultSet idsGenerados2 = comando.getGeneratedKeys();
+            idsGenerados2.next();
+
+
+            Transaccion retiro = new Transaccion(idsGenerados.getLong(1),
+                                    monto, 
+                                    folio, 
+                                    java.time.LocalDate.now().toString(),
+                                    numeroCuenta,
+                                    numeroCuentaDestino,
+                                    "Pendiente");
+            
+            logger.log(Level.INFO, "Se generaron las claves de la transferencia", numRegistros);
+
+                return retiro;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "No se pudo generar la transferencia", ex);
+            throw new PersistenciaException("No se pudo generar la transferencia", ex);
+        }
     }
-//    
-//    public Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) throws PersistenciaException {
-//        String sentenciaSQL = """
-//                           INSERT INTO cliente(fecha_nacimiento, edad, contrasenia)
-//                           VALUES(?, ?, ?) ;
-//                          """;
-//        
-//        
-//        try (
-//                Connection conexion = this.conexion.obtenerConexion() ;
-//                PreparedStatement comando = conexion.prepareStatement(
-//                sentenciaSQL,
-//                Statement.RETURN_GENERATED_KEYS);) {
-//            
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            Date fecha = dateFormat.parse(clienteNuevo.getFechaNacimiento());
-//            java.sql.Date fechaSql = new java.sql.Date(fecha.getTime());
-//            
-//            int edad = fechaSql.toLocalDate().until(LocalDate.now()).getYears() ;
-//            
-//            
-//            comando.setDate(1, fechaSql);
-//            comando.setInt(2, edad);
-//            comando.setString(3, clienteNuevo.getContrasenia()) ;
-//
-//            int numRegistros = comando.executeUpdate();
-//            logger.log(Level.INFO, "Se agregaron {0} clientes", numRegistros);
-//            
-//            ResultSet idsGenerados = comando.getGeneratedKeys();
-//            idsGenerados.next();
-//            
-//            String sentenciaSQL2 = """
-//                               INSERT INTO domicilio(calle, codigo_postal, numero_exterior, id_cliente_dom)
-//                               VALUES (?, ?, ?, ?) ;
-//                               """ ;
-//            
-//            try(
-//                PreparedStatement comando2 = conexion.prepareStatement(
-//                sentenciaSQL2,
-//                Statement.RETURN_GENERATED_KEYS);
-//                    ) {
-//                comando2.setString(1, clienteNuevo.getCalle());
-//                comando2.setInt(2, clienteNuevo.getCp());
-//                comando2.setInt(3, clienteNuevo.getNumExt());
-//                comando2.setLong(4, idsGenerados.getLong(1));
-//                
-//                int numRegistros2 = comando2.executeUpdate();
-//            } catch(SQLException ex) {
-//                logger.log(Level.SEVERE, "Error con el Domicilio del Cliente", ex);
-//                throw new PersistenciaException("Error con el Domicilio del Cliente", ex);
-//            }
-//            
-//            String sentenciaSQL3 = """
-//                                   INSERT INTO nombre_completo(nombres, apellido_paterno, apellido_materno, id_cliente_nom)
-//                                   VALUES(?, ?, ?, ?) ;
-//                                   """ ;
-//            
-//            try(
-//                PreparedStatement comando3 = conexion.prepareStatement(
-//                sentenciaSQL3,
-//                Statement.RETURN_GENERATED_KEYS);
-//                    ) {
-//                comando3.setString(1, clienteNuevo.getNombres());
-//                comando3.setString(2, clienteNuevo.getApellidoP());
-//                comando3.setString(3, clienteNuevo.getApellidoM());
-//                comando3.setLong(4, idsGenerados.getLong(1));
-//                
-//                int numRegistros3 = comando3.executeUpdate();
-//            } catch(SQLException ex) {
-//                logger.log(Level.SEVERE, "Error con el Nombre del Cliente", ex);
-//                throw new PersistenciaException("Error con el Nombre del Cliente", ex);
-//            }
-//            
-//            
-//            Cliente cliente = new Cliente(idsGenerados.getLong(1),
-//                    clienteNuevo.getNombres(),
-//                    clienteNuevo.getApellidoP(),
-//                    clienteNuevo.getApellidoM(),
-//                    clienteNuevo.getFechaNacimiento(),
-//                    edad,
-//                    clienteNuevo.getCalle(),
-//                    clienteNuevo.getNumExt(),
-//                    clienteNuevo.getCp(),
-//                    clienteNuevo.getContrasenia());
-//
-//            return cliente;
-//        } catch (SQLException ex) {
-//            logger.log(Level.SEVERE, "No se pudo guardar el cliente", ex);
-//            throw new PersistenciaException("No se pudo guardar el cliente", ex);
-//        } catch(ParseException ex) {
-//            logger.log(Level.SEVERE, "No se pudo guardar el cliente", ex);
-//            throw new PersistenciaException("No se pudo guardar el cliente", ex);
-//        }
-//    }
     
     @Override
     public Transaccion aplicarRetiroSinCuenta(int folio, int contrasenia) throws PersistenciaException {
         List<Transaccion> listaTransacciones = obtenerListaTransaccion();
-        List<Cuenta> listaCuentas = obtenerListaCuentas() ;
         boolean encontrado = false;
         Transaccion retiro = null ;
 
@@ -353,6 +348,46 @@ public class ClientesDAO implements IClientesDAO {
                 }
         }
         
+    @Override
+    public Transaccion aplicarTransferencia(int folio) throws PersistenciaException {
+        List<Transaccion> listaTransacciones = obtenerListaTransaccion();
+        boolean encontrado = false;
+        Transaccion retiro = null ;
+
+        for (int i = 0; i < listaTransacciones.size(); i++) {
+            int folioBuscar = listaTransacciones.get(i).getFolio();
+            
+            if (folio == folioBuscar) {
+                    retiro = listaTransacciones.get(i) ;
+                    encontrado = true ;
+                }
+            }
+                
+                if(encontrado == true) {
+                String sentenciaSQL = """
+                          UPDATE transaccion SET estado = 'Cobrado' 
+                                      WHERE folio = ? ;
+                          """;
+
+                try (
+                        Connection conexion = this.conexion.obtenerConexion(); PreparedStatement comando = conexion.prepareStatement(sentenciaSQL);
+                        ) {
+                    
+                    comando.setInt(1, folio);
+                    
+                    int numRegistros = comando.executeUpdate();
+                    logger.log(Level.INFO, "Se actualizó el estado de la Transaccion", numRegistros);
+                    
+                    return retiro;
+                } catch (SQLException ex) {
+                    logger.log(Level.SEVERE, "No se pudieron actualizar los datos del socio", ex);
+                    throw new PersistenciaException("No se pudieron actualizar los datos del socio", ex);
+                }
+                } else {
+                    throw new PersistenciaException("Folio incorrecto");
+                }
+    }
+    
     @Override
     public List<Cliente> obtenerListaClientes() throws PersistenciaException {
         String sentenciaSQL = """
@@ -633,7 +668,6 @@ public class ClientesDAO implements IClientesDAO {
         System.out.println("");
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
     
     
 }

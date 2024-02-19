@@ -31,8 +31,8 @@ public class Banco {
         IConexion conexion = new Conexion(cadenaConexion, user, password);
         IClientesDAO clientesDAO = new ClientesDAO(conexion);
 //        
-//        LoginForm login = new LoginForm(clientesDAO) ;        
-//        login.setVisible(true);
+        LoginForm login = new LoginForm(clientesDAO) ;        
+        login.setVisible(true);
 
 //        TablaSocios tablaSocios = new TablaSocios(sociosDAO) ;
 //        tablaSocios.setVisible(true);
@@ -50,14 +50,14 @@ public class Banco {
 //            //Transaccion retiro = clientesDAO.agregarRetiroSinCuenta(2, 500) ;
 //
 //
-        try {
-            for (int i = 0; i < clientesDAO.obtenerHistorialOperaciones(3, "2024-02-16", "2024-02-17").size(); i++) {
-                
-                System.out.println("numero de cuenta " + clientesDAO.obtenerHistorialOperaciones(3, "2024-02-16", "2024-02-17").get(i).getNumCuentaCliente());
-            }
-        } catch (PersistenciaException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            for (int i = 0; i < clientesDAO.obtenerHistorialOperaciones(3, "2024-02-16", "2024-02-17").size(); i++) {
+//                
+//                System.out.println("numero de cuenta " + clientesDAO.obtenerHistorialOperaciones(3, "2024-02-16", "2024-02-17").get(i).getNumCuentaCliente());
+//            }
+//        } catch (PersistenciaException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        }
 ////            
 ////            //logger.log(Level.INFO, retiro.toString());
 ////            //List<Cliente> listaSocios = clientesDAO.obtenerListaClientes();

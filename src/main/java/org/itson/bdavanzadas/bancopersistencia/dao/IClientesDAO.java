@@ -19,11 +19,15 @@ public interface IClientesDAO {
     
     Cliente agregarCliente(ClienteNuevoDTO clienteNuevo) throws PersistenciaException ;
     
+    Cliente actualizarCliente(Cliente ciente) throws PersistenciaException ;
+    
     Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException ;
     
-    Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException ;
+    Transaccion agregarTransferencia(long numeroCuenta, long numeroCuentaDestino, float monto) throws PersistenciaException ;
     
     Transaccion aplicarRetiroSinCuenta(int folio, int contrasenia) throws PersistenciaException ;
+    
+    Transaccion aplicarTransferencia(int folio) throws PersistenciaException ;
     
     List<Cliente> obtenerListaClientes() throws PersistenciaException ;
     

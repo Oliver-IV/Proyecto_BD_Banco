@@ -50,6 +50,16 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         }
     }
     
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtCodigoPostal.getText());
+            int entero2 = Integer.parseInt(txtNumExt.getText()) ;
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
     public void hidePersonalData() {
         lblDatosPersonales.setVisible(false);
         lblDatosPersonales.setEnabled(false);
@@ -82,11 +92,51 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         lblNumExt.setVisible(false);
         lblNumExt.setEnabled(false);
         txtNumExt.setVisible(false);
-        txtNumExt.setEnabled(false) ;
+        txtNumExt.setEnabled(false);
         lblCodigoPostal.setVisible(false);
         lblCodigoPostal.setEnabled(false);
         txtCodigoPostal.setVisible(false);
         txtCodigoPostal.setEnabled(false);
+    }
+
+    public void showPersonalData() {
+        lblDatosPersonales.setVisible(true);
+        lblDatosPersonales.setEnabled(true);
+        lblDomicilio.setVisible(true);
+        lblDomicilio.setEnabled(true);
+        lblNombres.setVisible(true);
+        lblNombres.setEnabled(true);
+        txtNombres.setVisible(true);
+        txtNombres.setEnabled(true);
+        lblApellidoP.setVisible(true);
+        lblApellidoP.setEnabled(true);
+        txtApellidoP.setVisible(true);
+        txtApellidoP.setEnabled(true);
+        lblApellidoM.setVisible(true);
+        lblApellidoM.setEnabled(true);
+        txtApellidoM.setVisible(true);
+        txtApellidoM.setEnabled(true);
+        lblFechaNacimiento.setVisible(true);
+        lblFechaNacimiento.setEnabled(true);
+        comboBoxAnio.setEnabled(true);
+        comboBoxAnio.setVisible(true);
+        comboBoxMes.setEnabled(true);
+        comboBoxMes.setVisible(true);
+        comboBoxDia.setEnabled(true);
+        comboBoxDia.setVisible(true);
+        lblCalle.setVisible(true);
+        lblCalle.setEnabled(true);
+        txtCalle.setVisible(true);
+        txtCalle.setEnabled(true);
+        lblNumExt.setVisible(true);
+        lblNumExt.setEnabled(true);
+        txtNumExt.setVisible(true);
+        txtNumExt.setEnabled(true);
+        lblCodigoPostal.setVisible(true);
+        lblCodigoPostal.setEnabled(true);
+        txtCodigoPostal.setVisible(true);
+        txtCodigoPostal.setEnabled(true);
+
     }
     
     public void showPassword() {
@@ -96,6 +146,8 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         txtContrasenia.setEnabled(true);
         lblCrearContrasenia.setVisible(true);
         lblCrearContrasenia.setEnabled(true);
+        btnVolver.setVisible(true);
+        btnVolver.setEnabled(true);
     }
     
     public void hidePassword() {
@@ -105,11 +157,14 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         txtContrasenia.setEnabled(false);
         lblCrearContrasenia.setVisible(false);
         lblCrearContrasenia.setEnabled(false);
+        btnVolver.setVisible(false);
+        btnVolver.setEnabled(false);
     }
     
     public boolean booleansFirst() {
         return txtNombres.getText().isBlank() || txtNombres.getText().isEmpty() || txtApellidoP.getText().isBlank() || txtApellidoP.getText().isEmpty()
-            || txtApellidoM.getText().isBlank() || txtApellidoM.getText().isEmpty() || txtCodigoPostal.getText().isBlank() || txtCodigoPostal.getText().isEmpty() ;
+            || txtApellidoM.getText().isBlank() || txtApellidoM.getText().isEmpty() || txtCodigoPostal.getText().isBlank() || txtCodigoPostal.getText().isEmpty() 
+                || txtCalle.getText().isBlank() || txtCalle.getText().isEmpty();
         
     }
     
@@ -149,9 +204,9 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         comboBoxAnio = new javax.swing.JComboBox<>();
         comboBoxMes = new javax.swing.JComboBox<>();
         comboBoxDia = new javax.swing.JComboBox<>();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(450, 350));
         getContentPane().setLayout(null);
 
         lblTitulo.setText("¡Crea una cuenta con nosotros!");
@@ -246,6 +301,15 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         getContentPane().add(comboBoxDia);
         comboBoxDia.setBounds(180, 270, 72, 22);
 
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnVolver);
+        btnVolver.setBounds(340, 40, 72, 23);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -254,8 +318,8 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         if (contClicks == 1) {
             if (!booleansSecond()) {
                 agregarCliente();
-                dispose() ;
-                PantallaFinRegistroForm finRegistro = new PantallaFinRegistroForm(clientesDAO, clienteRegistrado) ;
+                dispose();
+                PantallaFinRegistroForm finRegistro = new PantallaFinRegistroForm(clientesDAO, clienteRegistrado);
                 finRegistro.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
@@ -264,12 +328,20 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         }
         
         if (!booleansFirst()) {
-            contClicks++;
-            hidePersonalData();
-            showPassword();
-        } else {
+            if (!validarEnteros()) {
+                JOptionPane.showMessageDialog(this, "Codigo Postal o Numero exterior no son enteros, verificalo",
+                        "Formato invalido", JOptionPane.ERROR_MESSAGE);
+            } else {
+                contClicks++;
+                hidePersonalData();
+                showPassword();
+            }
+        } else if (booleansSecond()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
                     "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+        } else if (validarEnteros()) {
+            JOptionPane.showMessageDialog(this, "Codigo Postal o Numero exterior no son enteros, verificalo",
+                    "Formato invalido", JOptionPane.ERROR_MESSAGE);
         }
 
         
@@ -278,6 +350,12 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
     private void comboBoxMesComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_comboBoxMesComponentHidden
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxMesComponentHidden
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        showPersonalData() ;
+        hidePassword() ;
+        contClicks = 0 ;
+    }//GEN-LAST:event_btnVolverActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -316,6 +394,7 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> comboBoxAnio;
     private javax.swing.JComboBox<String> comboBoxDia;
     private javax.swing.JComboBox<String> comboBoxMes;

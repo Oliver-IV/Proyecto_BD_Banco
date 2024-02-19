@@ -7,8 +7,10 @@ package org.itson.bdavanzadas.banco;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
+import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException;
 
 /**
  *
@@ -26,6 +28,35 @@ public class PerfilForm extends javax.swing.JFrame {
         this.clientesDAO = clientesDAO ;
         this.cliente = cliente ;
         asignarCampos() ;
+        btnActualizar.setEnabled(false);
+        btnActualizar.setVisible(false);
+    }
+    
+    public void enableCampos() {
+        txtContrasenia.setEnabled(true);
+        txtContrasenia.setEditable(true);
+        txtCalle.setEnabled(true);
+        txtCalle.setEditable(true);
+        txtCodigoPostal.setEnabled(true);
+        txtCodigoPostal.setEditable(true);
+        txtNumExterior.setEnabled(true);
+        txtNumExterior.setEditable(true);
+        btnActualizar.setEnabled(true);
+        btnActualizar.setVisible(true);
+    }
+    
+    public void disableCampos() {
+        txtContrasenia.setEnabled(false);
+        txtContrasenia.setEditable(false);
+        txtCalle.setEnabled(false);
+        txtCalle.setEditable(false);
+        txtCodigoPostal.setEnabled(false);
+        txtCodigoPostal.setEditable(false);
+        txtNumExterior.setEnabled(false);
+        txtNumExterior.setEditable(false);
+        btnActualizar.setEnabled(false);
+        btnActualizar.setVisible(false);
+
     }
     
     public void asignarCampos() {
@@ -35,6 +66,8 @@ public class PerfilForm extends javax.swing.JFrame {
         txtCalle.setText(cliente.getCalle());
         txtCodigoPostal.setText(String.valueOf(cliente.getCp()));
         txtNumExterior.setText(String.valueOf(cliente.getNumExt())) ;
+        txtId.setText(String.valueOf(cliente.getId())) ;
+        txtContrasenia.setText(cliente.getContrasenia());
     }
     
     public int convertirFechaAEdad() {
@@ -46,6 +79,13 @@ public class PerfilForm extends javax.swing.JFrame {
         
             return edad ;
     }    
+    
+    public void actualizarCliente() {
+        cliente.setCalle(txtCalle.getText());
+        cliente.setContrasenia(txtContrasenia.getText());
+        cliente.setCp(Integer.parseInt(txtCodigoPostal.getText()));
+        cliente.setNumExt(Integer.parseInt(txtNumExterior.getText()));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,6 +108,13 @@ public class PerfilForm extends javax.swing.JFrame {
         txtFechaNacimiento = new javax.swing.JTextField();
         txtEdad = new javax.swing.JTextField();
         btnVolver = new javax.swing.JButton();
+        lblId = new javax.swing.JLabel();
+        lblContrasenia = new javax.swing.JLabel();
+        txtContrasenia = new javax.swing.JPasswordField();
+        txtId = new javax.swing.JTextField();
+        toggleContrasenia = new javax.swing.JToggleButton();
+        toggleModificar = new javax.swing.JToggleButton();
+        btnActualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,33 +149,71 @@ public class PerfilForm extends javax.swing.JFrame {
             }
         });
 
+        lblId.setText("ID:");
+
+        lblContrasenia.setText("Contraseña:");
+
+        txtContrasenia.setEditable(false);
+
+        txtId.setEditable(false);
+
+        toggleContrasenia.setText("Ver Contraseña");
+        toggleContrasenia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleContraseniaActionPerformed(evt);
+            }
+        });
+
+        toggleModificar.setText("Modificar");
+        toggleModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleModificarActionPerformed(evt);
+            }
+        });
+
+        btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(lblId)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
-                        .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFechaNacimiento)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
-                                .addComponent(lblEdad)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblFechaNacimiento)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblEdad)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblContrasenia)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtContrasenia)
+                                    .addComponent(toggleContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblDomicilio))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblNumExt)
@@ -139,42 +224,72 @@ public class PerfilForm extends javax.swing.JFrame {
                                     .addComponent(txtCalle)
                                     .addComponent(txtCodigoPostal)
                                     .addComponent(txtNumExterior, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnVolver)
-                                .addGap(31, 31, 31)))))
-                .addGap(17, 17, 17))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(117, 117, 117)
+                                .addComponent(lblDomicilio)))))
+                .addGap(48, 48, 48))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnActualizar)
+                .addGap(46, 46, 46)
+                .addComponent(toggleModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(103, 103, 103))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(btnVolver)
-                .addGap(18, 18, 18)
+                .addGap(17, 17, 17)
                 .addComponent(lblNombre)
-                .addGap(20, 20, 20)
-                .addComponent(lblDomicilio)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblId)
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(btnVolver)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblContrasenia)
+                            .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(toggleContrasenia)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblEdad)
+                                    .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(lblFechaNacimiento)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCalle)
-                            .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblEdad)
-                            .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblFechaNacimiento)
                             .addComponent(lblCodigoPostal)
                             .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblNumExt)
                             .addComponent(txtNumExterior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)))
-                .addGap(48, 48, 48))
+                    .addComponent(lblDomicilio))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(toggleModificar)
+                    .addComponent(btnActualizar))
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -185,6 +300,38 @@ public class PerfilForm extends javax.swing.JFrame {
         MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
         menu.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void toggleContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleContraseniaActionPerformed
+        if (toggleContrasenia.isSelected()) {
+            txtContrasenia.setEchoChar((char)0);
+        } else {
+            txtContrasenia.setEchoChar('*');
+        }
+    }//GEN-LAST:event_toggleContraseniaActionPerformed
+
+    private void toggleModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleModificarActionPerformed
+        if (toggleModificar.isSelected()) {
+            enableCampos() ;
+        } else {
+            disableCampos() ;
+        }
+    }//GEN-LAST:event_toggleModificarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        try{
+            int resp = JOptionPane.showConfirmDialog(this, "¿Estas seguro de realizar estos cambios?", "Modificar datos", 
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ;
+            if (resp == 0) {
+                actualizarCliente() ;
+                clientesDAO.actualizarCliente(cliente) ;
+                JOptionPane.showMessageDialog(this, "¡Se han actualizado tus datos!", "Modificacion exitosa", JOptionPane.INFORMATION_MESSAGE);
+            } 
+            
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Modificacion", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_btnActualizarActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -222,18 +369,25 @@ public class PerfilForm extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel lblCalle;
     private javax.swing.JLabel lblCodigoPostal;
+    private javax.swing.JLabel lblContrasenia;
     private javax.swing.JLabel lblDomicilio;
     private javax.swing.JLabel lblEdad;
     private javax.swing.JLabel lblFechaNacimiento;
+    private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNumExt;
+    private javax.swing.JToggleButton toggleContrasenia;
+    private javax.swing.JToggleButton toggleModificar;
     private javax.swing.JTextField txtCalle;
     private javax.swing.JTextField txtCodigoPostal;
+    private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtEdad;
     private javax.swing.JTextField txtFechaNacimiento;
+    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNumExterior;
     // End of variables declaration//GEN-END:variables
 }

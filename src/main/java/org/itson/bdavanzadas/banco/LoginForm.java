@@ -73,10 +73,11 @@ public class LoginForm extends javax.swing.JFrame {
         lblId = new javax.swing.JLabel();
         lblContrasenia = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
-        txtContrasenia = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         btnRetiroSinCuenta = new javax.swing.JButton();
         btnRegistrar = new javax.swing.JButton();
+        txtContrasenia = new javax.swing.JPasswordField();
+        toggleContrasenia = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,6 +114,13 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
+        toggleContrasenia.setText("Ver");
+        toggleContrasenia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleContraseniaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,13 +135,15 @@ public class LoginForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblContrasenia)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnRegistrar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRetiroSinCuenta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(120, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnRegistrar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRetiroSinCuenta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtContrasenia))
+                        .addGap(4, 4, 4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(toggleContrasenia)
+                .addGap(69, 69, 69))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblInicio)
@@ -151,8 +161,9 @@ public class LoginForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblContrasenia)
-                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toggleContrasenia))
+                .addGap(31, 31, 31)
                 .addComponent(btnLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRetiroSinCuenta)
@@ -190,6 +201,14 @@ public class LoginForm extends javax.swing.JFrame {
         RegistrarClienteForm registrarCliente = new RegistrarClienteForm(clientesDAO) ;
         registrarCliente.setVisible(true);
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void toggleContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleContraseniaActionPerformed
+        if (toggleContrasenia.isSelected()) {
+            txtContrasenia.setEchoChar((char)0);
+        } else {
+            txtContrasenia.setEchoChar('*');
+        }
+    }//GEN-LAST:event_toggleContraseniaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -233,7 +252,8 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblContrasenia;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblInicio;
-    private javax.swing.JTextField txtContrasenia;
+    private javax.swing.JToggleButton toggleContrasenia;
+    private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 }

@@ -34,17 +34,18 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="lblContrasenia" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtContrasenia" min="-2" pref="122" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="btnRegistrar" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnRetiroSinCuenta" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnLogin" alignment="0" max="32767" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="btnRegistrar" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnRetiroSinCuenta" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnLogin" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtContrasenia" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="120" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="toggleContrasenia" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
@@ -67,8 +68,9 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblContrasenia" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtContrasenia" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="toggleContrasenia" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Component id="btnLogin" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnRetiroSinCuenta" min="-2" max="-2" attributes="0"/>
@@ -100,8 +102,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtIdActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtContrasenia">
-    </Component>
     <Component class="javax.swing.JButton" name="btnLogin">
       <Properties>
         <Property name="text" type="java.lang.String" value="Iniciar Sesi&#xf3;n"/>
@@ -124,6 +124,16 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegistrarActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="txtContrasenia">
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="toggleContrasenia">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ver"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleContraseniaActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

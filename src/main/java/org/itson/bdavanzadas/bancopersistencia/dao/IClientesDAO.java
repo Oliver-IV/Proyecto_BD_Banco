@@ -22,6 +22,10 @@ public interface IClientesDAO {
     
     Cliente actualizarCliente(Cliente ciente) throws PersistenciaException ;
     
+    long cancelarCuenta(long numeroCuenta) ;
+    
+    Cuenta agregarCuenta(long idCliente, float saldo) throws PersistenciaException ;
+    
     Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException ;
     
     Transaccion agregarTransferencia(long numeroCuenta, long numeroCuentaDestino, float monto) throws PersistenciaException ;

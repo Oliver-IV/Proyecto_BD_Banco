@@ -29,9 +29,15 @@ public class LoginForm extends javax.swing.JFrame {
         this.clientesDAO = clientesDAO;
     }
 
-//    public void agregarCliente() {
-//
-//    }
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtId.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public void iniciarSesion() {
         try {
             long id = Integer.parseInt(txtId.getText());
@@ -185,12 +191,17 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if (txtId.getText().isBlank() || txtContrasenia.getText().isBlank() || txtId.getText().isEmpty() || txtContrasenia.getText().isEmpty()) {
+        if (txtId.getText().isBlank() || txtContrasenia.getText().isBlank()
+                || txtId.getText().isEmpty() || txtContrasenia.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
                     "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
         } else {
-            iniciarSesion();
-            dispose();
+            if (validarEnteros()) {
+                iniciarSesion();
+            } else {
+                JOptionPane.showMessageDialog(this, "El campo ID debe ser un número entero",
+                        "Error en ID", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

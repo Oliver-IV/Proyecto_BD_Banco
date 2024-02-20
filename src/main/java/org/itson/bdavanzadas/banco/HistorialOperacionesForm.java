@@ -133,6 +133,8 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Historial de Operaciones");
+        setResizable(false);
 
         jtblHistorialOperaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -202,6 +204,7 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefrescarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarTablaActionPerformed

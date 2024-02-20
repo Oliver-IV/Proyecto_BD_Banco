@@ -12,7 +12,7 @@ import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
  * @author castr
  */
 public class PantallaRetiroOutForm extends javax.swing.JFrame {
-    
+
     public PantallaRetiroOutForm(float monto, String fecha) {
         initComponents();
         txtMonto.setText(String.valueOf(monto));
@@ -110,7 +110,6 @@ public class PantallaRetiroOutForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
 

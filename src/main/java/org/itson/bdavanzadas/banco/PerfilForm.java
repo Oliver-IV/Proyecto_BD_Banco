@@ -17,21 +17,32 @@ import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException
  * @author Oliver Valle
  */
 public class PerfilForm extends javax.swing.JFrame {
-    
-    IClientesDAO clientesDAO ;
-    Cliente cliente ;
+
+    IClientesDAO clientesDAO;
+    Cliente cliente;
+
     /**
      * Creates new form PerfilForm
      */
     public PerfilForm(IClientesDAO clientesDAO, Cliente cliente) {
         initComponents();
-        this.clientesDAO = clientesDAO ;
-        this.cliente = cliente ;
-        asignarCampos() ;
+        this.clientesDAO = clientesDAO;
+        this.cliente = cliente;
+        asignarCampos();
         btnActualizar.setEnabled(false);
         btnActualizar.setVisible(false);
     }
-    
+
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtCodigoPostal.getText());
+            int entero2 = Integer.parseInt(txtNumExterior.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public void enableCampos() {
         txtContrasenia.setEnabled(true);
         txtContrasenia.setEditable(true);
@@ -44,7 +55,7 @@ public class PerfilForm extends javax.swing.JFrame {
         btnActualizar.setEnabled(true);
         btnActualizar.setVisible(true);
     }
-    
+
     public void disableCampos() {
         txtContrasenia.setEnabled(false);
         txtContrasenia.setEditable(false);
@@ -58,34 +69,35 @@ public class PerfilForm extends javax.swing.JFrame {
         btnActualizar.setVisible(false);
 
     }
-    
+
     public void asignarCampos() {
         lblNombre.setText(cliente.getNombres() + " " + cliente.getApellidoP() + " " + cliente.getApellidoM());
         txtEdad.setText(String.valueOf(convertirFechaAEdad()));
         txtFechaNacimiento.setText(cliente.getFechaNacimiento());
         txtCalle.setText(cliente.getCalle());
         txtCodigoPostal.setText(String.valueOf(cliente.getCp()));
-        txtNumExterior.setText(String.valueOf(cliente.getNumExt())) ;
-        txtId.setText(String.valueOf(cliente.getId())) ;
+        txtNumExterior.setText(String.valueOf(cliente.getNumExt()));
+        txtId.setText(String.valueOf(cliente.getId()));
         txtContrasenia.setText(cliente.getContrasenia());
     }
-    
-    public int convertirFechaAEdad() {
-        
-            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate fechaNacimiento = LocalDate.parse(cliente.getFechaNacimiento(), dateFormat);
 
-            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
-        
-            return edad ;
-    }    
-    
+    public int convertirFechaAEdad() {
+
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fechaNacimiento = LocalDate.parse(cliente.getFechaNacimiento(), dateFormat);
+
+        int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+
+        return edad;
+    }
+
     public void actualizarCliente() {
         cliente.setCalle(txtCalle.getText());
         cliente.setContrasenia(txtContrasenia.getText());
         cliente.setCp(Integer.parseInt(txtCodigoPostal.getText()));
         cliente.setNumExt(Integer.parseInt(txtNumExterior.getText()));
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -296,14 +308,14 @@ public class PerfilForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        dispose() ;
-        MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+        dispose();
+        MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente);
         menu.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void toggleContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleContraseniaActionPerformed
         if (toggleContrasenia.isSelected()) {
-            txtContrasenia.setEchoChar((char)0);
+            txtContrasenia.setEchoChar((char) 0);
         } else {
             txtContrasenia.setEchoChar('*');
         }
@@ -311,26 +323,40 @@ public class PerfilForm extends javax.swing.JFrame {
 
     private void toggleModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleModificarActionPerformed
         if (toggleModificar.isSelected()) {
-            enableCampos() ;
+            enableCampos();
         } else {
-            disableCampos() ;
+            disableCampos();
         }
     }//GEN-LAST:event_toggleModificarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        try{
-            int resp = JOptionPane.showConfirmDialog(this, "¿Estas seguro de realizar estos cambios?", "Modificar datos", 
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ;
+        try {
+            if (txtCodigoPostal.getText().isBlank() || txtCodigoPostal.getText().isBlank()
+                    || txtNumExterior.getText().isBlank() || txtNumExterior.getText().isEmpty()
+                    || txtCalle.getText().isBlank() || txtCalle.getText().isEmpty()
+                    || txtContrasenia.getText().isBlank() || txtContrasenia.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
+                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+            }
+
+            if (!validarEnteros()) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingresa valores válidos para los campos numéricos.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int resp = JOptionPane.showConfirmDialog(this, "¿Estás seguro de realizar estos cambios?", "Modificar datos",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
             if (resp == 0) {
-                actualizarCliente() ;
-                clientesDAO.actualizarCliente(cliente) ;
-                JOptionPane.showMessageDialog(this, "¡Se han actualizado tus datos!", "Modificacion exitosa", JOptionPane.INFORMATION_MESSAGE);
-            } 
-            
+                actualizarCliente();
+                clientesDAO.actualizarCliente(cliente);
+                JOptionPane.showMessageDialog(this, "¡Se han actualizado tus datos!", "Modificación exitosa", JOptionPane.INFORMATION_MESSAGE);
+            }
+
         } catch (PersistenciaException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Modificacion", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Modificación", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnActualizarActionPerformed
 
 //    /**

@@ -204,62 +204,67 @@ public class TransferenciaForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        try {
-            // Realizar las validaciones adicionales
-            if (txtMonto.getText().isBlank() || txtMonto.getText().isEmpty()
-                    || txtNumCuentaDest.getText().isBlank() || txtNumCuentaDest.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
-                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (!validarEnteros()) {
-                JOptionPane.showMessageDialog(this, "Ingresa valores enteros válidos",
-                        "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (!validarFlotantes()) {
-                JOptionPane.showMessageDialog(this, "Ingresa valores flotantes válidos",
-                        "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int resp = JOptionPane.showConfirmDialog(this, "¿Quieres realizar la transferencia?", "Modificar datos",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-            if (resp == 0) {
-                if (!existeCuenta()) {
-                    JOptionPane.showMessageDialog(this, "La cuenta de destino no existe", "Error en Transferencia",
-                            JOptionPane.ERROR_MESSAGE);
+        if (!txtNumCuentaDest.getText().equals(String.valueOf(numCuentaSelec))) {
+            try {
+                // Realizar las validaciones adicionales
+                if (txtMonto.getText().isBlank() || txtMonto.getText().isEmpty()
+                        || txtNumCuentaDest.getText().isBlank() || txtNumCuentaDest.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
+                            "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
-                  if (!verificarNumerosPositivos()) {
-                    JOptionPane.showMessageDialog(this, "No se pueden ingresar numeros negativos",
+
+                if (!validarEnteros()) {
+                    JOptionPane.showMessageDialog(this, "Ingresa valores enteros válidos",
                             "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (!verificarSaldoDisponible()) {
-                    JOptionPane.showMessageDialog(this, "El saldo del cliente no es suficiente para la transferencia",
+                if (!validarFlotantes()) {
+                    JOptionPane.showMessageDialog(this, "Ingresa valores flotantes válidos",
                             "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
-                Transaccion transferencia = clientesDAO.agregarTransferencia(numCuentaSelec,
-                        Long.parseLong(txtNumCuentaDest.getText()), Float.parseFloat(txtMonto.getText()));
-                transferencia = clientesDAO.aplicarTransferencia(transferencia.getFolio());
-                JOptionPane.showMessageDialog(this, "¡Se ha realizado la transferencia!", "Modificacion exitosa",
-                        JOptionPane.INFORMATION_MESSAGE);
-                PantallaTransferenciaForm trans = new PantallaTransferenciaForm(clientesDAO, cliente, transferencia);
-                dispose();
-                trans.setVisible(true);
 
+                int resp = JOptionPane.showConfirmDialog(this, "¿Quieres realizar la transferencia?", "Modificar datos",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                if (resp == 0) {
+                    if (!existeCuenta()) {
+                        JOptionPane.showMessageDialog(this, "La cuenta de destino no existe", "Error en Transferencia",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (!verificarNumerosPositivos()) {
+                        JOptionPane.showMessageDialog(this, "No se pueden ingresar numeros negativos",
+                                "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (!verificarSaldoDisponible()) {
+                        JOptionPane.showMessageDialog(this, "El saldo del cliente no es suficiente para la transferencia",
+                                "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    Transaccion transferencia = clientesDAO.agregarTransferencia(numCuentaSelec,
+                            Long.parseLong(txtNumCuentaDest.getText()), Float.parseFloat(txtMonto.getText()));
+                    transferencia = clientesDAO.aplicarTransferencia(transferencia.getFolio());
+                    JOptionPane.showMessageDialog(this, "¡Se ha realizado la transferencia!", "Modificacion exitosa",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    PantallaTransferenciaForm trans = new PantallaTransferenciaForm(clientesDAO, cliente, transferencia);
+                    dispose();
+                    trans.setVisible(true);
+
+                }
+            } catch (PersistenciaException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (PersistenciaException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No puedes transferirte a ti mismo xD", "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed

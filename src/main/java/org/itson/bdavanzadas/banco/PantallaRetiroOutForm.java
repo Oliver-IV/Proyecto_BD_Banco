@@ -53,6 +53,8 @@ public class PantallaRetiroOutForm extends javax.swing.JFrame {
         lblDescripcion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Retiro sin cuenta exitoso");
+        setResizable(false);
 
         lblTitulo.setText("Retiro sin cuenta");
 
@@ -121,6 +123,7 @@ public class PantallaRetiroOutForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed

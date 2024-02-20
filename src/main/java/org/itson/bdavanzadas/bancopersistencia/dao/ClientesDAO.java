@@ -58,8 +58,8 @@ public class ClientesDAO implements IClientesDAO {
                                    """;
         
         String sentenciaSQL4 = """
-                               INSERT INTO cuenta(saldo, id_cliente)
-                               VALUES(?, ?) ;
+                               INSERT INTO cuenta(saldo, id_cliente, estado)
+                               VALUES(?, ?, ?) ;
                                """ ;
 
         try (
@@ -130,6 +130,8 @@ public class ClientesDAO implements IClientesDAO {
             
             comando4.setFloat(1, 0) ;
             comando4.setLong(2, idsGenerados.getLong(1));
+            comando4.setString(3, "Activa");
+            
             
             int numRegistros4 = comando4.executeUpdate();
             ResultSet idsGenerados4 = comando4.getGeneratedKeys();
@@ -177,11 +179,74 @@ public class ClientesDAO implements IClientesDAO {
             return cliente ;
             
         } catch(SQLException ex) {
-            logger.log(Level.SEVERE, "No se pudieron actualizar los datos del socio", ex) ;
-            throw new PersistenciaException("No se pudieron actualizar los datos del socio", ex) ;
+            logger.log(Level.SEVERE, "No se pudieron actualizar los datos del cliente", ex) ;
+            throw new PersistenciaException("No se pudieron actualizar los datos del cliente", ex) ;
         }
     }
 
+    @Override
+    public long cancelarCuenta(long numeroCuenta) {
+        String sentenciaSQL = """
+                              UPDATE cuenta
+                              SET estado = 'Cancelada',
+                              saldo = 0
+                              WHERE numero_cuenta = ?;
+                              """ ;
+        
+        try(
+            Connection conexion = this.conexion.obtenerConexion() ;
+            PreparedStatement comando = conexion.prepareStatement(sentenciaSQL);
+                ) {
+            
+            comando.setLong(1, numeroCuenta);
+            
+            int numRegistros = comando.executeUpdate() ;
+            logger.log(Level.INFO, "Se actualizaron los datos del cliente", numRegistros);
+        } catch(SQLException ex) {
+            logger.log(Level.SEVERE, "No se pudo cancelar la cuenta", ex) ;
+        }
+        
+        return numeroCuenta ;
+    }
+    
+    @Override
+    public Cuenta agregarCuenta(long idCliente, float saldo) throws PersistenciaException {
+        String sentenciaSQL = """
+                               INSERT INTO cuenta(saldo, id_cliente, estado)
+                               VALUES(?, ?, ?) ;
+                               """ ;
+        
+        try (
+                Connection conexion = this.conexion.obtenerConexion(); 
+                
+                PreparedStatement comando = conexion.prepareStatement(
+                        sentenciaSQL,
+                        Statement.RETURN_GENERATED_KEYS);
+                
+                ) {
+
+            
+            comando.setFloat(1, saldo) ;
+            comando.setLong(2, idCliente);
+            comando.setString(3, "Activa");
+            
+            
+            int numRegistros = comando.executeUpdate();
+            ResultSet idsGenerados = comando.getGeneratedKeys();
+            idsGenerados.next();
+            
+            Cuenta cuenta = new Cuenta(idsGenerados.getLong(1), LocalDate.now().toString(), saldo, idCliente, "Activa") ;
+            
+            logger.log(Level.INFO, "Se agrego una cuenta al cliente", numRegistros);
+
+            return cuenta;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "No se pudo guardar el cliente", ex);
+            throw new PersistenciaException("No se pudo guardar el cliente", ex);
+        }
+        
+    }
+    
     @Override
     public Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException {
         String sentenciaSQL = """
@@ -427,7 +492,6 @@ public class ClientesDAO implements IClientesDAO {
                 int edad = resultados.getInt("edad");
                 String contrasenia = resultados.getString("contrasenia");
                 Cliente cliente = new Cliente(id, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, edad, calle, numExt, cp, contrasenia) ;
-                System.out.println(cliente.getNombres());
                 listaClientes.add(cliente);
             }
 
@@ -454,13 +518,16 @@ public class ClientesDAO implements IClientesDAO {
                 ) {
 
             while (resultados.next()) {
-                Long numeroCuenta = resultados.getLong("numero_cuenta") ;
+                String estado = resultados.getString("estado") ;
+                if (!estado.equals("Cancelada")) {
+                    Long numeroCuenta = resultados.getLong("numero_cuenta") ;
                 String fechaApertura = resultados.getString("fecha_apertura") ;
                 Float saldo = resultados.getFloat("saldo") ;
                 long idCliente = resultados.getInt("id_cliente") ;
                 
-                Cuenta cuenta = new Cuenta(numeroCuenta, fechaApertura, saldo, idCliente) ;
+                Cuenta cuenta = new Cuenta(numeroCuenta, fechaApertura, saldo, idCliente, estado) ;
                 listaCuentas.add(cuenta);
+                }
             }
 
         } catch (SQLException e) {
@@ -701,7 +768,5 @@ public class ClientesDAO implements IClientesDAO {
         }
         return listaTransacciones;
     }
-
-    
     
 }

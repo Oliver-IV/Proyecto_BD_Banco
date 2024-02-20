@@ -11,14 +11,23 @@ package org.itson.bdavanzadas.bancodominio;
 public class Cuenta {
     
     private long numCuenta, idCliente ;
-    private String fechaApertura ;
+    private String fechaApertura, estado ;
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
     private float saldo ;
     
-    public Cuenta(long numCuenta, String fechaApertura, float saldo, long idCliente) {
+    public Cuenta(long numCuenta, String fechaApertura, float saldo, long idCliente, String estado) {
         this.numCuenta = numCuenta ;
         this.fechaApertura = fechaApertura ;
         this.saldo = saldo ;
         this.idCliente = idCliente ;
+        this.estado = estado ;
     }
 
     public long getNumCuenta() {

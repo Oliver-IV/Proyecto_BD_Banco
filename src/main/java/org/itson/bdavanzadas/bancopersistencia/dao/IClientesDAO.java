@@ -24,7 +24,7 @@ public interface IClientesDAO {
 
     Transaccion agregarRetiroSinCuenta(long numeroCuenta, float monto) throws PersistenciaException;
 
-    Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException;
+    Transaccion agregarTransferencia(long numeroCuenta, long numeroCuentaDestino, float monto) throws PersistenciaException;
 
     Transaccion aplicarRetiroSinCuenta(int folio, int contrasenia) throws PersistenciaException;
     

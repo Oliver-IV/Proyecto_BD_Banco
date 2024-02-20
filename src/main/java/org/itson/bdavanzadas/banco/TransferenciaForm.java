@@ -129,19 +129,19 @@ public class TransferenciaForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-//        try{
-//            int resp = JOptionPane.showConfirmDialog(this, "¿Quieres realizar la transferencia?", "Modificar datos", 
-//                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ;
-//            if (resp == 0) {
-//                Transaccion transferencia = clientesDAO.agregarTransferencia(numCuentaSelec, Long.parseLong(txtNumCuentaDest.getText()), Float.parseFloat(txtMonto.getText())) ;
-//                transferencia = clientesDAO.aplicarTransferencia(transferencia.getFolio()) ;
-//                dispose() ;
-//                JOptionPane.showMessageDialog(this, "¡Se ha realizado la transferencia!", "Modificacion exitosa", JOptionPane.INFORMATION_MESSAGE);
-//                PantallaTransferenciaForm trans = new PantallaTransferenciaForm(clientesDAO, cliente, transferencia) ;
-//            } 
-//        } catch (PersistenciaException ex) {
-//            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
-//        }
+        try{
+            int resp = JOptionPane.showConfirmDialog(this, "¿Quieres realizar la transferencia?", "Modificar datos", 
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ;
+            if (resp == 0) {
+                Transaccion transferencia = clientesDAO.agregarTransferencia(numCuentaSelec, Long.parseLong(txtNumCuentaDest.getText()), Float.parseFloat(txtMonto.getText())) ;
+                transferencia = clientesDAO.aplicarTransferencia(transferencia.getFolio()) ;
+                dispose() ;
+                JOptionPane.showMessageDialog(this, "¡Se ha realizado la transferencia!", "Modificacion exitosa", JOptionPane.INFORMATION_MESSAGE);
+                PantallaTransferenciaForm trans = new PantallaTransferenciaForm(clientesDAO, cliente, transferencia) ;
+            } 
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed

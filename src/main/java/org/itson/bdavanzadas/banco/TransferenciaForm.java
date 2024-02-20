@@ -4,8 +4,12 @@
  */
 package org.itson.bdavanzadas.banco;
 
+import java.util.List;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
+import static org.itson.bdavanzadas.banco.LoginForm.logger;
 import org.itson.bdavanzadas.bancodominio.Cliente;
+import org.itson.bdavanzadas.bancodominio.Cuenta;
 import org.itson.bdavanzadas.bancodominio.Transaccion;
 import org.itson.bdavanzadas.bancopersistencia.dao.IClientesDAO;
 import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException;
@@ -16,21 +20,89 @@ import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException
  */
 public class TransferenciaForm extends javax.swing.JFrame {
 
-    IClientesDAO clientesDAO ;
-    Cliente cliente ;
-    long numCuentaSelec ;
-    
+    IClientesDAO clientesDAO;
+    Cliente cliente;
+    long numCuentaSelec;
+    Cuenta cuentaSelec;
+
     /**
      * Creates new form TransferenciaForm
      */
-    public TransferenciaForm(IClientesDAO clientesDAO, Cliente cliente, long numCuentaSelec) {
+    public TransferenciaForm(IClientesDAO clientesDAO, Cliente cliente, Cuenta cuentaSelec) {
         initComponents();
-        this.clientesDAO = clientesDAO ;
-        this.cliente = cliente ;
-        this.numCuentaSelec = numCuentaSelec ;
+        this.clientesDAO = clientesDAO;
+        this.cliente = cliente;
+        this.numCuentaSelec = cuentaSelec.getNumCuenta();
+        this.cuentaSelec = cuentaSelec;
     }
-    
-    
+
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtNumCuentaDest.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean validarFlotantes() {
+        try {
+            float flotante = Float.parseFloat(txtMonto.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean existeCuenta() {
+        try {
+            List<Cuenta> listaCuentas = clientesDAO.obtenerListaCuentas();
+            for (Cuenta cuenta : listaCuentas) {
+                if (cuenta.getNumCuenta() == Long.parseLong(txtNumCuentaDest.getText())) {
+                    return true;
+                }
+            }
+
+            return false;
+
+        } catch (PersistenciaException e) {
+            logger.log(Level.SEVERE, "No existe una cuenta destino coincidente", e);
+        }
+
+        return false;
+    }
+
+    public boolean verificarSaldoDisponible() {
+        try {
+            float saldoCliente = cuentaSelec.getSaldo();
+            if (saldoCliente >= Float.parseFloat(txtMonto.getText())) {
+                return true; // El saldo es suficiente
+            } else {
+                return false; // El saldo no es suficiente
+            }
+
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Error al verificar el saldo del cliente", e);
+        }
+
+        return false;
+    }
+
+    public boolean verificarNumerosPositivos() {
+        try {
+            float numero = Float.parseFloat(txtMonto.getText());
+            if (numero >= 0) {
+                return true; // Es un número positivo o cero
+            } else {
+                logger.log(Level.SEVERE, "Cifra inválida, no se permiten números negativos");
+            }
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Cifra inválida, no se permiten caracteres no numéricos", e);
+        }
+
+        return false;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -129,24 +201,67 @@ public class TransferenciaForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        try{
-            int resp = JOptionPane.showConfirmDialog(this, "¿Quieres realizar la transferencia?", "Modificar datos", 
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ;
+        try {
+            // Realizar las validaciones adicionales
+            if (txtMonto.getText().isBlank() || txtMonto.getText().isEmpty()
+                    || txtNumCuentaDest.getText().isBlank() || txtNumCuentaDest.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
+                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!validarEnteros()) {
+                JOptionPane.showMessageDialog(this, "Ingresa valores enteros válidos",
+                        "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!validarFlotantes()) {
+                JOptionPane.showMessageDialog(this, "Ingresa valores flotantes válidos",
+                        "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int resp = JOptionPane.showConfirmDialog(this, "¿Quieres realizar la transferencia?", "Modificar datos",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
             if (resp == 0) {
-                Transaccion transferencia = clientesDAO.agregarTransferencia(numCuentaSelec, Long.parseLong(txtNumCuentaDest.getText()), Float.parseFloat(txtMonto.getText())) ;
-                transferencia = clientesDAO.aplicarTransferencia(transferencia.getFolio()) ;
-                dispose() ;
-                JOptionPane.showMessageDialog(this, "¡Se ha realizado la transferencia!", "Modificacion exitosa", JOptionPane.INFORMATION_MESSAGE);
-                PantallaTransferenciaForm trans = new PantallaTransferenciaForm(clientesDAO, cliente, transferencia) ;
-            } 
+                if (!existeCuenta()) {
+                    JOptionPane.showMessageDialog(this, "La cuenta de destino no existe", "Error en Transferencia",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                  if (!verificarNumerosPositivos()) {
+                    JOptionPane.showMessageDialog(this, "No se pueden ingresar numeros negativos",
+                            "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!verificarSaldoDisponible()) {
+                    JOptionPane.showMessageDialog(this, "El saldo del cliente no es suficiente para la transferencia",
+                            "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                Transaccion transferencia = clientesDAO.agregarTransferencia(numCuentaSelec,
+                        Long.parseLong(txtNumCuentaDest.getText()), Float.parseFloat(txtMonto.getText()));
+                transferencia = clientesDAO.aplicarTransferencia(transferencia.getFolio());
+                JOptionPane.showMessageDialog(this, "¡Se ha realizado la transferencia!", "Modificacion exitosa",
+                        JOptionPane.INFORMATION_MESSAGE);
+                PantallaTransferenciaForm trans = new PantallaTransferenciaForm(clientesDAO, cliente, transferencia);
+                dispose();
+                trans.setVisible(true);
+
+            }
         } catch (PersistenciaException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en Transferencia", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        dispose() ;
-        MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+        dispose();
+        MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente);
         menu.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
 

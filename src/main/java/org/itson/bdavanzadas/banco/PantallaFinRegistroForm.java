@@ -42,6 +42,8 @@ public class PantallaFinRegistroForm extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("¡Te has registrado!");
+        setResizable(false);
 
         lblTitulo.setText("¡Has sido registrado con éxito!");
 
@@ -89,6 +91,7 @@ public class PantallaFinRegistroForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed

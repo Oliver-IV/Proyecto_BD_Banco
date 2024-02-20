@@ -86,8 +86,8 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
             modelo.addColumn("Monto");
             modelo.addColumn("Estado");
 
-            // Ordenar la lista de transacciones por fecha de manera descendente (de la más reciente a la más antigua)
-            Collections.sort(listaHistorialOperaciones, Comparator.comparing(Transaccion::getFecha).reversed());
+//            // Ordenar la lista de transacciones por fecha de manera descendente (de la más reciente a la más antigua)
+//            Collections.sort(listaHistorialOperaciones, Comparator.comparing(Transaccion::getFecha).reversed());
 
             // Agregar las transacciones al modelo de la tabla
             for (Transaccion transaccion : listaHistorialOperaciones) {

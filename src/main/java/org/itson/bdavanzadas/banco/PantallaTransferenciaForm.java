@@ -52,6 +52,8 @@ public class PantallaTransferenciaForm extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Transferencia Exitosa");
+        setResizable(false);
 
         lblDescripcion.setText("¡Se ha realizado la transferencia con éxito!");
 
@@ -134,10 +136,13 @@ public class PantallaTransferenciaForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        dispose() ;
         MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+        menu.setVisible(true);
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**

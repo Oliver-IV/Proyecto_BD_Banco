@@ -4,7 +4,11 @@
  */
 package org.itson.bdavanzadas.banco;
 
+import com.toedter.calendar.JDateChooser;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.itson.bdavanzadas.bancodominio.Transaccion;
@@ -25,19 +30,46 @@ import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException
 public class HistorialOperacionesForm extends javax.swing.JFrame {
 
     private final IClientesDAO clientesDAO;
-    private long numCuentaCliente;
+    long numCuentaSeleccionado;
     static final Logger logger = Logger.getLogger(HistorialOperacionesForm.class.getName());
     Date fechaInicio, fechaFin;
+    private JDateChooser dateChooser;
 
     /**
      * Creates new form HistorialOperacionesForm
      */
-    public HistorialOperacionesForm(IClientesDAO clientesDAO, long numCuentaCliente) {
+    public HistorialOperacionesForm(IClientesDAO clientesDAO, long numCuentaSeleccionado) {
         initComponents();
-        this.numCuentaCliente = numCuentaCliente;
+        this.numCuentaSeleccionado = numCuentaSeleccionado;
         this.clientesDAO = clientesDAO;
 //        this.numCuentaCliente = numCuentaCliente;
         llenarTabla();
+        crearDateChooser();
+    }
+
+
+
+    public void limitarCalendario(JDateChooser dateChooser) {
+        LocalDate fechaActual = LocalDate.now();
+
+        // Calcular la fecha mínima (hace 120 años desde la fecha actual)
+        LocalDate fechaMinima = fechaActual.minusYears(1);
+        Date fechaMinimaSQL = Date.valueOf(fechaMinima);
+
+        // Calcular la fecha máxima (hace 18 años desde la fecha actual)
+        LocalDate fechaMaxima = fechaActual;
+        Date fechaMaximaSQL = Date.valueOf(fechaMaxima);
+
+        // Establecer el rango de fechas seleccionables
+        dateChooser.setSelectableDateRange(fechaMinimaSQL, fechaMaximaSQL);
+
+    }
+
+    private void crearDateChooser() {
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(171, 143, 142, 26);
+        // Agregar el JDateChooser al contenedor
+        add(dateChooser);
     }
 
     private void llenarTabla() {
@@ -46,7 +78,7 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
         this.fechaInicio = new Date(new GregorianCalendar(2024, Calendar.JANUARY, 1).getTimeInMillis());
         this.fechaFin = new Date(new GregorianCalendar().getTimeInMillis());
         try {
-            listaHistorialOperaciones = clientesDAO.obtenerHistorialOperaciones(numCuentaCliente, fechaInicio, fechaFin);
+            listaHistorialOperaciones = clientesDAO.obtenerHistorialOperaciones(numCuentaSeleccionado, fechaInicio, fechaFin);
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.addColumn("ID Transacción");
             modelo.addColumn("Número de Cuenta Cliente");
@@ -88,6 +120,7 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblHistorialOperaciones = new javax.swing.JTable();
+        btnRefrescarTabla = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -104,6 +137,13 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jtblHistorialOperaciones);
 
+        btnRefrescarTabla.setText("Refrescar");
+        btnRefrescarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescarTablaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -112,16 +152,26 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(7, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRefrescarTabla)
+                .addGap(16, 16, 16))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 50, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 13, Short.MAX_VALUE)
+                .addComponent(btnRefrescarTabla)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRefrescarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarTablaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRefrescarTablaActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -159,6 +209,7 @@ public class HistorialOperacionesForm extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRefrescarTabla;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jtblHistorialOperaciones;
     // End of variables declaration//GEN-END:variables

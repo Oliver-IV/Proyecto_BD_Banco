@@ -18,46 +18,53 @@ import org.itson.bdavanzadas.bancopersistencia.excepciones.PersistenciaException
  */
 public class RetiroSinCuentaInForm extends javax.swing.JFrame {
 
-    IClientesDAO clientesDAO ;
-    float saldo ;
-    Cuenta cuenta ;
-    
-    
-    
+    IClientesDAO clientesDAO;
+    float saldo;
+    Cuenta cuenta;
+
     /**
      * Creates new form RetiroSinCuentaInForm
      */
     public RetiroSinCuentaInForm(IClientesDAO clientesDAO, float saldo, Cuenta cuenta) {
         initComponents();
-        this.clientesDAO = clientesDAO ;
-        this.saldo = saldo ;
-        this.cuenta = cuenta ;
+        this.clientesDAO = clientesDAO;
+        this.saldo = saldo;
+        this.cuenta = cuenta;
     }
-    
+
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtMonto.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public void llamarPantallaRetiro() {
         try {
             clientesDAO.agregarRetiroSinCuenta(cuenta.getNumCuenta(), Float.parseFloat(txtMonto.getText()));
             List<Transaccion> listaRetiroSinCuenta = clientesDAO.obtenerListaRetiroSinCuenta();
             int folio = 0;
             int contrasenia = 0;
-            long numCuenta = cuenta.getNumCuenta() ;
-                    
+            long numCuenta = cuenta.getNumCuenta();
+
             for (int i = 0; i < listaRetiroSinCuenta.size(); i++) {
-                long numCuentaBuscar = listaRetiroSinCuenta.get(i).getNumCuentaCliente() ;
+                long numCuentaBuscar = listaRetiroSinCuenta.get(i).getNumCuentaCliente();
                 if (numCuenta == numCuentaBuscar) {
-                    folio = listaRetiroSinCuenta.get(i).getFolio() ;
-                    contrasenia = listaRetiroSinCuenta.get(i).getContrasenia() ;
+                    folio = listaRetiroSinCuenta.get(i).getFolio();
+                    contrasenia = listaRetiroSinCuenta.get(i).getContrasenia();
                 }
             }
-            
+
             PantallaRetiroInForm pantallaRetiro = new PantallaRetiroInForm(folio, contrasenia);
-            dispose() ;
+            dispose();
             pantallaRetiro.setVisible(true);
         } catch (PersistenciaException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al generar el retiro", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -132,9 +139,14 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         if (txtMonto.getText().isBlank() || txtMonto.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
-                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+                    "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
         } else {
-            llamarPantallaRetiro() ;
+            if (validarEnteros()) {
+                llamarPantallaRetiro();
+            } else {
+                JOptionPane.showMessageDialog(this, "Ingrese un número entero válido en el campo Monto",
+                        "Formato Incorrecto", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 

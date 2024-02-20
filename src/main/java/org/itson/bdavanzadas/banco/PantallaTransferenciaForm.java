@@ -138,6 +138,8 @@ public class PantallaTransferenciaForm extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, cliente) ;
+        dispose();
+        menu.setVisible(true);
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**

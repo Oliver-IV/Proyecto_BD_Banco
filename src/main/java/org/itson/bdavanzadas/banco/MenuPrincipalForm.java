@@ -223,11 +223,13 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHistorialOpActionPerformed
 
     private void btnTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferirActionPerformed
-        JOptionPane.showMessageDialog(this, "Esta función está en desarrollo actualmente",
-                "Opcion en Desarrollo", JOptionPane.INFORMATION_MESSAGE);
+      dispose();
+      TransferenciaForm transferenciaForm = new TransferenciaForm(clientesDAO, cliente, obtenerNumCuentaSelec());
+      transferenciaForm.setVisible(true);
     }//GEN-LAST:event_btnTransferirActionPerformed
 
     private void btnRetiroSinCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetiroSinCuentaActionPerformed
+        dispose();
         RetiroSinCuentaInForm retiroSinCuenta = new RetiroSinCuentaInForm(clientesDAO, Float.parseFloat(txtSaldo.getText()), cuentasCliente.get(0));
         retiroSinCuenta.setVisible(true);
     }//GEN-LAST:event_btnRetiroSinCuentaActionPerformed

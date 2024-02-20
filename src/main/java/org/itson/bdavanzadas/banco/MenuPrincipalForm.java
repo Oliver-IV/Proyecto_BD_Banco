@@ -224,7 +224,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
 
     private void btnTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferirActionPerformed
       dispose();
-      TransferenciaForm transferenciaForm = new TransferenciaForm(clientesDAO, cliente, obtenerNumCuentaSelec());
+      TransferenciaForm transferenciaForm = new TransferenciaForm(clientesDAO, cliente, obtenerCuentaSelec());
       transferenciaForm.setVisible(true);
     }//GEN-LAST:event_btnTransferirActionPerformed
 

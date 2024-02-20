@@ -25,21 +25,38 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
         this.clientesDAO = clientesDAO;
     }
 
-    public void obtener() {
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtContraseniaRetiro.getText());
+            int entero2 = Integer.parseInt(txtFolio.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public void obtenerDatosRetiro() {
         try {
             List<Transaccion> listaTransacciones = clientesDAO.obtenerListaTransaccion();
             int folio = Integer.parseInt(txtFolio.getText());
             int contrasenia = Integer.parseInt(txtContraseniaRetiro.getText());
+            boolean correcto = false;
 
             for (int i = 0; i < listaTransacciones.size(); i++) {
                 if (folio == listaTransacciones.get(i).getFolio() && contrasenia == listaTransacciones.get(i).getContrasenia()) {
                     float monto = listaTransacciones.get(i).getMonto();
                     String fecha = listaTransacciones.get(i).getFecha();
-                    clientesDAO.aplicarRetiroSinCuenta(folio, contrasenia) ;
+                    clientesDAO.aplicarRetiroSinCuenta(folio, contrasenia);
+                    correcto = true;
                     PantallaRetiroOutForm pantallaRetiroOutForm = new PantallaRetiroOutForm(monto, fecha);
                     dispose();
                     pantallaRetiroOutForm.setVisible(true);
                 }
+            }
+
+            if (correcto == false) {
+                JOptionPane.showMessageDialog(this, "No encontramos datos de retiro sin cuenta coincidentes, verifica tus datos",
+                        "Datos de retiro no encontrados", JOptionPane.ERROR_MESSAGE);
             }
         } catch (PersistenciaException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error al generar el retiro", JOptionPane.ERROR_MESSAGE);
@@ -124,11 +141,17 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (txtFolio.getText().isBlank() || txtContraseniaRetiro.getText().isBlank() || txtFolio.getText().isEmpty() || txtContraseniaRetiro.getText().isEmpty()) {
+        if (txtFolio.getText().isBlank() || txtContraseniaRetiro.getText().isBlank()
+                || txtFolio.getText().isEmpty() || txtContraseniaRetiro.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
-                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
-        }else{
-            obtener() ;
+                    "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (validarEnteros()) {
+                obtenerDatosRetiro();
+            } else {
+                JOptionPane.showMessageDialog(this, "Los campos deben ser números enteros",
+                        "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 

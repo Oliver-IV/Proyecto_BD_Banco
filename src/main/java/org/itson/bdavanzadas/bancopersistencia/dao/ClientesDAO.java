@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancodominio.Cuenta;
 import org.itson.bdavanzadas.bancodominio.Transaccion;
@@ -195,9 +196,7 @@ public class ClientesDAO implements IClientesDAO {
     public Transaccion agregarTransferencia(long numeroCuenta, long numeroCuentaDestino, float monto) throws PersistenciaException {
         String sentenciaSQL = """
         INSERT INTO transaccion(monto, folio, fecha, num_cuenta_cliente, estado)
-        VALUES( ?,  ?, CURDATE(),  ?, 'Pendiente'
-    
-    ) ;
+        VALUES( ?,  ?, CURDATE(),  ?, 'Pendiente') ;
                           """;
 
         String sentenciaSQL2 = """
@@ -626,11 +625,13 @@ public class ClientesDAO implements IClientesDAO {
         }
     }
 
+  
     @Override
     public Transaccion aplicarTransferencia(int folio) throws PersistenciaException {
         List<Transaccion> listaTransacciones = obtenerListaTransaccion();
         boolean encontrado = false;
         Transaccion retiro = null;
+        boolean existeCuenta = false;
 
         for (int i = 0; i < listaTransacciones.size(); i++) {
             int folioBuscar = listaTransacciones.get(i).getFolio();
@@ -639,6 +640,7 @@ public class ClientesDAO implements IClientesDAO {
                 retiro = listaTransacciones.get(i);
                 encontrado = true;
             }
+
         }
 
         if (encontrado == true) {
@@ -648,7 +650,8 @@ public class ClientesDAO implements IClientesDAO {
                           """;
 
             try (
-                    Connection conexion = this.conexion.obtenerConexion(); PreparedStatement comando = conexion.prepareStatement(sentenciaSQL);) {
+                    Connection conexion = this.conexion.obtenerConexion(); 
+                    PreparedStatement comando = conexion.prepareStatement(sentenciaSQL);) {
 
                 comando.setInt(1, folio);
 
@@ -656,6 +659,7 @@ public class ClientesDAO implements IClientesDAO {
                 logger.log(Level.INFO, "Se actualizó el estado de la Transaccion", numRegistros);
 
                 return retiro;
+
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "No se pudieron actualizar los datos del socio", ex);
                 throw new PersistenciaException("No se pudieron actualizar los datos del socio", ex);

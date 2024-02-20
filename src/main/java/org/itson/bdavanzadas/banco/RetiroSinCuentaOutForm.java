@@ -26,7 +26,7 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
         this.clientesDAO = clientesDAO;
     }
 
-    public void obtener() {
+    public void obtenerDatosRetiro() {
         try {
             List<Transaccion> listaTransacciones = clientesDAO.obtenerListaTransaccion();
             int folio = Integer.parseInt(txtFolio.getText());
@@ -50,6 +50,16 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
         }
 
     }
+    
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtContraseniaRetiro.getText());
+            int entero2 = Integer.parseInt(txtFolio.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,6 +79,8 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
         btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("¡Has tu retiro sin cuenta!");
+        setResizable(false);
 
         lblInicio.setText("Retiro sin Cuenta");
 
@@ -140,14 +152,21 @@ public class RetiroSinCuentaOutForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (txtFolio.getText().isBlank() || txtContraseniaRetiro.getText().isBlank() || txtFolio.getText().isEmpty() || txtContraseniaRetiro.getText().isEmpty()) {
+        if (txtFolio.getText().isBlank() || txtContraseniaRetiro.getText().isBlank()
+                || txtFolio.getText().isEmpty() || txtContraseniaRetiro.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
-                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
-        }else{
-            obtener() ;
+                    "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (validarEnteros()) {
+                obtenerDatosRetiro();
+            } else {
+                JOptionPane.showMessageDialog(this, "Los campos deben ser números enteros",
+                        "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 

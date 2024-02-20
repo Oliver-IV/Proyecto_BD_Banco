@@ -192,59 +192,58 @@ public class ClientesDAO implements IClientesDAO {
     }
 
     @Override
-    public Transaccion agregarTransferencia(long numeroCuenta) throws PersistenciaException {
-//        String sentenciaSQL = """
-//        INSERT INTO transaccion(monto, folio, fecha, num_cuenta_cliente, estado)
-//        VALUES( ?,  ?, CURDATE(),  ?, 'Pendiente'
-//    
-//    ) ;
-//                          """;
-//
-//        String sentenciaSQL2 = """
-//                               INSERT INTO transferencia(id_transaccion_tra, num_cuenta_destino)
-//                               VALUES(?, ?) ;
-//                               """;
-//
-//        try (
-//                Connection conexion = this.conexion.obtenerConexion(); PreparedStatement comando = conexion.prepareStatement(
-//                sentenciaSQL,
-//                Statement.RETURN_GENERATED_KEYS); PreparedStatement comando2 = conexion.prepareStatement(
-//                        sentenciaSQL2,
-//                        Statement.RETURN_GENERATED_KEYS);) {
-//
-//            int folio = generarContrasenia(6);
-//
-//            comando.setFloat(1, monto);
-//            comando.setInt(2, folio);
-//            comando.setLong(3, numeroCuenta);
-//
-//            int numRegistros = comando.executeUpdate();
-//            ResultSet idsGenerados = comando.getGeneratedKeys();
-//            idsGenerados.next();
-//
-//            comando2.setLong(1, idsGenerados.getLong(1));
-//            comando2.setLong(2, numeroCuentaDestino);
-//
-//            int numRegistros2 = comando2.executeUpdate();
-//            ResultSet idsGenerados2 = comando.getGeneratedKeys();
-//            idsGenerados2.next();
-//
-//            Transaccion retiro = new Transaccion(idsGenerados.getLong(1),
-//                    monto,
-//                    folio,
-//                    java.time.LocalDate.now().toString(),
-//                    numeroCuenta,
-//                    numeroCuentaDestino,
-//                    "Pendiente");
-//
-//            logger.log(Level.INFO, "Se generaron las claves de la transferencia", numRegistros);
-//
-//            return retiro;
-//        } catch (SQLException ex) {
-//            logger.log(Level.SEVERE, "No se pudo generar la transferencia", ex);
-//            throw new PersistenciaException("No se pudo generar la transferencia", ex);
-//        }
-return null;
+    public Transaccion agregarTransferencia(long numeroCuenta, long numeroCuentaDestino, float monto) throws PersistenciaException {
+        String sentenciaSQL = """
+        INSERT INTO transaccion(monto, folio, fecha, num_cuenta_cliente, estado)
+        VALUES( ?,  ?, CURDATE(),  ?, 'Pendiente'
+    
+    ) ;
+                          """;
+
+        String sentenciaSQL2 = """
+                               INSERT INTO transferencia(id_transaccion_tra, num_cuenta_destino)
+                               VALUES(?, ?) ;
+                               """;
+
+        try (
+                Connection conexion = this.conexion.obtenerConexion(); PreparedStatement comando = conexion.prepareStatement(
+                sentenciaSQL,
+                Statement.RETURN_GENERATED_KEYS); PreparedStatement comando2 = conexion.prepareStatement(
+                        sentenciaSQL2,
+                        Statement.RETURN_GENERATED_KEYS);) {
+
+            int folio = generarContrasenia(6);
+
+            comando.setFloat(1, monto);
+            comando.setInt(2, folio);
+            comando.setLong(3, numeroCuenta);
+
+            int numRegistros = comando.executeUpdate();
+            ResultSet idsGenerados = comando.getGeneratedKeys();
+            idsGenerados.next();
+
+            comando2.setLong(1, idsGenerados.getLong(1));
+            comando2.setLong(2, numeroCuentaDestino);
+
+            int numRegistros2 = comando2.executeUpdate();
+            ResultSet idsGenerados2 = comando.getGeneratedKeys();
+            idsGenerados2.next();
+
+            Transaccion retiro = new Transaccion(idsGenerados.getLong(1),
+                    monto,
+                    folio,
+                    java.time.LocalDate.now().toString(),
+                    numeroCuenta,
+                    numeroCuentaDestino,
+                    "Pendiente");
+
+            logger.log(Level.INFO, "Se generaron las claves de la transferencia", numRegistros);
+
+            return retiro;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "No se pudo generar la transferencia", ex);
+            throw new PersistenciaException("No se pudo generar la transferencia", ex);
+        }
     }
 
     @Override

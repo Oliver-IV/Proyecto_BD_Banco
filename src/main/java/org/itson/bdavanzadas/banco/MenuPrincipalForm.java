@@ -117,6 +117,8 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         comboBoxCuentas = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Menú Principal");
+        setResizable(false);
 
         lblInicio.setText("Hola");
 
@@ -224,11 +226,12 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
         dispose() ;
-        PerfilForm perfil = new PerfilForm(clientesDAO, cliente) ;
+        PerfilForm perfil = new PerfilForm(clientesDAO, cliente, cuentasCliente) ;
         perfil.setVisible(true);
     }//GEN-LAST:event_btnPerfilActionPerformed
 
@@ -240,7 +243,7 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
 
     private void btnTransferirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferirActionPerformed
         dispose() ;
-        TransferenciaForm transferencia = new TransferenciaForm(clientesDAO, cliente, obtenerNumCuentaSelec()) ;
+        TransferenciaForm transferencia = new TransferenciaForm(clientesDAO, cliente, obtenerCuentaSelec()) ;
         transferencia.setVisible(true);
     }//GEN-LAST:event_btnTransferirActionPerformed
 

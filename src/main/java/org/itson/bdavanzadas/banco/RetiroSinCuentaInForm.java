@@ -6,7 +6,9 @@ package org.itson.bdavanzadas.banco;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
+import static org.itson.bdavanzadas.banco.LoginForm.logger;
 import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancodominio.Cuenta;
 import org.itson.bdavanzadas.bancodominio.Transaccion;
@@ -61,6 +63,30 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
         }
     }
     
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtMonto.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    public boolean verificarSaldoDisponible() {
+        try {
+            float saldoCliente = cuenta.getSaldo();
+            if (saldoCliente >= Float.parseFloat(txtMonto.getText())) {
+                return true; // El saldo es suficiente
+            } else {
+                return false; // El saldo no es suficiente
+            }
+
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Error al verificar el saldo del cliente", e);
+        }
+
+        return false;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,6 +104,8 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
         btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Genera un retiro sin Cuenta");
+        setResizable(false);
 
         lblInicio.setText("Retiro Sin Cuenta");
 
@@ -142,14 +170,25 @@ public class RetiroSinCuentaInForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         if (txtMonto.getText().isBlank() || txtMonto.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
-                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+                    "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
         } else {
-            llamarPantallaRetiro() ;
+            if(verificarSaldoDisponible()) {
+                if (validarEnteros()) {
+                    llamarPantallaRetiro();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ingrese un número entero válido en el campo Monto",
+                        "Formato Incorrecto", JOptionPane.ERROR_MESSAGE);
+                }
+            } else{
+                JOptionPane.showMessageDialog(this, "No tienes saldo suficiente",
+                        "Saldo insuficiente", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 

@@ -46,6 +46,8 @@ public class PantallaRetiroInForm extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("¡Se ha generado tu retiro sin cuenta!");
+        setResizable(false);
 
         lblInicio.setText("Retiro Sin cuenta");
 
@@ -109,6 +111,7 @@ public class PantallaRetiroInForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed

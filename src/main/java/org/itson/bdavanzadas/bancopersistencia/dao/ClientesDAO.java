@@ -4,6 +4,7 @@
  */
 package org.itson.bdavanzadas.bancopersistencia.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -83,12 +84,11 @@ public class ClientesDAO implements IClientesDAO {
                 ) {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date fecha = dateFormat.parse(clienteNuevo.getFechaNacimiento());
-            java.sql.Date fechaSql = new java.sql.Date(fecha.getTime());
+            Date fecha = new java.sql.Date(dateFormat.parse(clienteNuevo.getFechaNacimiento()).getTime());
 
-            int edad = fechaSql.toLocalDate().until(LocalDate.now()).getYears();
+            int edad = fecha.toLocalDate().until(LocalDate.now()).getYears();
 
-            comando2.setString(1, clienteNuevo.getCalle());
+            comando2.setString(1, clienteNuevo.getCalle()) ;
             comando2.setInt(2, clienteNuevo.getCp());
             comando2.setInt(3, clienteNuevo.getNumExt());
 
@@ -104,7 +104,7 @@ public class ClientesDAO implements IClientesDAO {
             ResultSet idsGenerados3 = comando3.getGeneratedKeys();
             idsGenerados3.next();
 
-            comando.setDate(1, fechaSql);
+            comando.setDate(1, fecha);
             comando.setInt(2, edad);
             comando.setString(3, clienteNuevo.getContrasenia());
             comando.setLong(4, idsGenerados2.getLong(1));
@@ -664,10 +664,44 @@ public class ClientesDAO implements IClientesDAO {
     }
 
     @Override
-    public List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, String fechaInicio, String fechaFin) {
-        System.out.println("");
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, Date fechaInicio, Date fechaFin) throws PersistenciaException {
+        Logger logger = Logger.getLogger(ClientesDAO.class
+                .getName());
+        String sentenciaSQL = "CALL ObtenerTransaccionesPorFecha(?, ?, ?)";
+
+        List<Transaccion> listaTransacciones = new LinkedList<>();
+
+        try (Connection conexion = this.conexion.obtenerConexion(); CallableStatement comando = conexion.prepareCall(sentenciaSQL);) {
+
+            comando.setDate(1, fechaInicio);
+            comando.setDate(2, fechaFin);
+            comando.setLong(3, numeroCuenta);
+
+            try (ResultSet resultados = comando.executeQuery()) {
+
+                while (resultados.next()) {
+
+                    long id = resultados.getLong("id_transaccion");
+                    int monto = resultados.getInt("monto");
+                    String fecha = resultados.getString("fecha");
+                    String estado = resultados.getString("estado");
+
+                    // Obtener el número de cuenta cliente de la transacción
+                    long numCuentaCliente = resultados.getLong("num_cuenta_cliente");
+
+                    Transaccion historialOperaciones = new Transaccion(id, monto, fecha, estado);
+                    historialOperaciones.setNumCuentaCliente(numCuentaCliente);
+
+                    listaTransacciones.add(historialOperaciones);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al ejecutar el procedimiento almacenado", e);
+            throw new PersistenciaException("Error al ejecutar el procedimiento almacenado", e);
+        }
+        return listaTransacciones;
     }
+
     
     
 }

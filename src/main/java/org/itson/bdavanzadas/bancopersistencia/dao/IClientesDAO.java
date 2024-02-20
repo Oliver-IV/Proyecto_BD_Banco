@@ -4,6 +4,7 @@
  */
 package org.itson.bdavanzadas.bancopersistencia.dao;
 
+import java.sql.Date;
 import java.util.List;
 import org.itson.bdavanzadas.bancodominio.Cliente;
 import org.itson.bdavanzadas.bancodominio.Cuenta;
@@ -39,6 +40,6 @@ public interface IClientesDAO {
     
     List<Transaccion> obtenerListaTransefencias() throws PersistenciaException ;
     
-    List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, String fechaInicio, String fechaFin) ;
+    List<Transaccion> obtenerHistorialOperaciones(long numeroCuenta, Date fechaInicio, Date fechaFin) throws PersistenciaException ;
     
 }

@@ -68,6 +68,7 @@ public class AgregarCuentaForm extends javax.swing.JFrame {
         jLabel2.setText("jLabel2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Agregar cuenta cliente");
 
         lblTitulo.setText("Agregar Cuenta a Clientes");
 
@@ -152,6 +153,7 @@ public class AgregarCuentaForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed

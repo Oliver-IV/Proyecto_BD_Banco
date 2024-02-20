@@ -9,14 +9,14 @@ package org.itson.bdavanzadas.bancodominio;
  * @author Oliver Valle
  */
 public class Transaccion {
-    
-    private long id ;
-    private int folio ;
-    private float monto ;
-    private String fecha, estado ;
-    private long numCuentaCliente ;
-    private long numCuentaDestino ;
-    private int contrasenia ;
+
+    private long id;
+    private int folio;
+    private float monto;
+    private String fecha, estado;
+    private long numCuentaCliente;
+    private long numCuentaDestino;
+    private int contrasenia;
 
     public Transaccion(long id, float monto, int folio, String fecha, long numCuentaCliente, long numCuentaDestino, String estado) {
         this.id = id;
@@ -24,18 +24,18 @@ public class Transaccion {
         this.folio = folio;
         this.fecha = fecha;
         this.numCuentaCliente = numCuentaCliente;
-        this.numCuentaDestino = numCuentaDestino ;
-        this.estado = estado ;
+        this.numCuentaDestino = numCuentaDestino;
+        this.estado = estado;
     }
-    
+
     public Transaccion(long id, float monto, int folio, String fecha, long numCuentaCliente, int contrasenia, String estado) {
         this.id = id;
         this.monto = monto;
         this.folio = folio;
         this.fecha = fecha;
         this.numCuentaCliente = numCuentaCliente;
-        this.contrasenia = contrasenia ;
-        this.estado = estado ;
+        this.contrasenia = contrasenia;
+        this.estado = estado;
     }
 
     public Transaccion(long id, float monto, String fecha, String estado) {
@@ -44,8 +44,6 @@ public class Transaccion {
         this.fecha = fecha;
         this.estado = estado;
     }
-    
-    
 
     public String getEstado() {
         return estado;
@@ -110,7 +108,5 @@ public class Transaccion {
     public void setContrasenia(int contrasenia) {
         this.contrasenia = contrasenia;
     }
-    
-    
-    
+
 }

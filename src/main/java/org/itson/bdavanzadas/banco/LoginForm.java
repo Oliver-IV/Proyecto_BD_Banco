@@ -20,6 +20,7 @@ public class LoginForm extends javax.swing.JFrame {
 
     static final Logger logger = Logger.getLogger(LoginForm.class.getName());
     IClientesDAO clientesDAO;
+    boolean sesionIniciada = false ;
 
     /**
      * Creates new form LoginForm
@@ -42,6 +43,7 @@ public class LoginForm extends javax.swing.JFrame {
                 String contraseniaBuscar = listaClientes.get(i).getContrasenia();
                 if (id == idBuscar && contrasenia.equals(contraseniaBuscar)) {
                     correcto = true;
+                    sesionIniciada = true ;
                     JOptionPane.showMessageDialog(this, "Has iniciado sesion correctamente",
                             "Iniciaste Sesion!", JOptionPane.INFORMATION_MESSAGE);
                     MenuPrincipalForm menu = new MenuPrincipalForm(clientesDAO, listaClientes.get(i));
@@ -59,6 +61,19 @@ public class LoginForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al iniciar sesion", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    public boolean validarEnteros() {
+        try {
+            int entero = Integer.parseInt(txtId.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -78,8 +93,12 @@ public class LoginForm extends javax.swing.JFrame {
         btnRegistrar = new javax.swing.JButton();
         txtContrasenia = new javax.swing.JPasswordField();
         toggleContrasenia = new javax.swing.JToggleButton();
+        btnAgregar = new javax.swing.JButton();
+        lblAdmin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Iniciar Sesión");
+        setResizable(false);
 
         lblInicio.setText("Iniciar Sesion");
 
@@ -121,6 +140,15 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
+        btnAgregar.setText("Agregar Cuentas");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+
+        lblAdmin.setText("(Solo Admin)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,15 +173,25 @@ public class LoginForm extends javax.swing.JFrame {
                 .addComponent(toggleContrasenia)
                 .addGap(69, 69, 69))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btnAgregar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblInicio)
                 .addGap(161, 161, 161))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblAdmin)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(lblInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(lblAdmin)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgregar))
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblId)
@@ -173,6 +211,7 @@ public class LoginForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
@@ -180,12 +219,20 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if(txtId.getText().isBlank() || txtContrasenia.getText().isBlank() || txtId.getText().isEmpty() || txtContrasenia.getText().isEmpty()) {
+        if (txtId.getText().isBlank() || txtContrasenia.getText().isBlank()
+                || txtId.getText().isEmpty() || txtContrasenia.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Rellena los espacios en Blanco",
-                        "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
+                    "Espacios en Blanco", JOptionPane.ERROR_MESSAGE);
         } else {
-            iniciarSesion() ;
-            dispose() ;
+            if (validarEnteros()) {
+                iniciarSesion();
+                if (sesionIniciada == true) 
+                    dispose() ;
+                
+            } else {
+                JOptionPane.showMessageDialog(this, "El campo ID debe ser un número entero",
+                        "Error en ID", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -209,6 +256,18 @@ public class LoginForm extends javax.swing.JFrame {
             txtContrasenia.setEchoChar('*');
         }
     }//GEN-LAST:event_toggleContraseniaActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        String passwordAdmin = JOptionPane.showInputDialog(this, "Ingresa Contraseña de Admin:") ;
+        
+        if (passwordAdmin.equals("admin")) {
+            dispose() ;
+            AgregarCuentaForm agregarCuenta = new AgregarCuentaForm(clientesDAO) ;
+            agregarCuenta.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Contraseña incorrecta", "Contraseña incorrecta", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,9 +305,11 @@ public class LoginForm extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton btnRetiroSinCuenta;
+    private javax.swing.JLabel lblAdmin;
     private javax.swing.JLabel lblContrasenia;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblInicio;

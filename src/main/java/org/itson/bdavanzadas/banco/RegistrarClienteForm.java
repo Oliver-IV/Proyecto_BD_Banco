@@ -207,6 +207,9 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("¡Registrate como Cliente!");
+        setPreferredSize(new java.awt.Dimension(450, 350));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         lblTitulo.setText("¡Crea una cuenta con nosotros!");
@@ -311,6 +314,7 @@ public class RegistrarClienteForm extends javax.swing.JFrame {
         btnVolver.setBounds(340, 40, 72, 23);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
